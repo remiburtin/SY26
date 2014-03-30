@@ -26,8 +26,49 @@
    	hyperindex,
 	linktocpage=true	% pour colorier seulement le numéros dans la TOC	
 ]{hyperref}
+\usepackage{listings}
+
 
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\newcommand*\styleC{\fontsize{9}{10pt}\selectfont }
+\newcommand*\styleD{\fontsize{9}{10pt}\usefont{OT1}{pag}{m}{n}\selectfont }
+
+\makeatletter
+% on fixe le langage utilisé
+\lstset{language=matlab}
+\edef\Motscle{emph={\lst@keywords}}
+\expandafter\lstset\expandafter{%
+  \Motscle}
+\makeatother
+
+
+\definecolor{Ggris}{rgb}{0.45,0.48,0.45}
+
+\lstset{emphstyle=\ttfamily\color{blue}, % les mots réservés de matlab en bleu
+basicstyle=\ttfamily\styleC, % 
+keywordstyle=\ttfamily,
+commentstyle=\color{Ggris}\styleD, % \styleD commentaire en gris
+numberstyle=\tiny\color{black},
+numbers=left,
+numbersep=10pt,
+lineskip=0.7pt,
+showstringspaces=false}
+%  % inclure le fichier source
+\newcommand{\FSource}[1]{%
+\lstinputlisting[texcl=true]{#1}
+}
+
+%%%%%%%%%
+\textwidth=15cm
+\textheight=21cm
+%\hoffset=-2.5cm
+\tolerance=9000
+\hbadness=9000
+\pretolerance=2500
+
+
+
 
 
 \begin{document}
@@ -44,12 +85,30 @@
 \clearpage
 
 \section{Introduction}
-Le but de ce TP est de comparer le codage de Huffman au codage arithmétique. Pour cela, nous avons travaillé sur une image ('lena.bmp') en niveaux de gris, ce qui permet de fixer une valeur (entre 0 et 255) pour chaque pixel de l'image. Depuis les probabilités des pixels, que nous avons calculé via un histogramme (cf. TP précédent), nous avons implémenté les deux algorithmes.
+L'objectif de ce TP est de comparer le codage de Huffman au codage arithmétique. Pour cela, nous travaillons sur une image ('lena.bmp') en niveaux de gris, ce qui permet de fixer une seule valeur (entre 0 et 255) pour chaque pixel de l'image. Depuis les probabilités des pixels, que nous avons calculé via un histogramme (cf. TP précédent), nous avons implémenté les deux algorithmes, puis calculé le taux de compression de chacun.
 
 \section{Codeur de Huffman}
+Afin de réaliser l'encodage, il est nécessaire de connaître la distribution de probabilités des niveaux de gris de l'image. Pour cela, nous commençons par réaliser l'histogramme comptant le nombre d'occurrences de chaque valeur de gris.
+
+\begin{figure}[h]
+\begin{center}
+	 \includegraphics[scale=0.5]{../proba.jpg}
+	 \caption{\label{probaGris} Distribution de probabilités, niveaux de gris}
+\end{center}
+\end{figure}
+
 
 \section{Codeur arithmétique}
 
 \section{Conclusion}
+
+
+\clearpage
+\appendix
+
+\section{Codes source MATLAB}
+\subsection{Algorithme - codage de Huffman}\label{algohuffman}
+
+\FSource{../huffman.m}
 
 \end{document}
