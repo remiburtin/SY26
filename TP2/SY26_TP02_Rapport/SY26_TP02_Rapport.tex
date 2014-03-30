@@ -1,0 +1,55 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage[utf8]{inputenc}  % Unicode
+
+\usepackage{geometry}
+\geometry{left=18mm,right=18mm,top=21mm,bottom=21mm}
+
+\usepackage{graphics}
+\usepackage[french]{babel}
+\usepackage[pdftex]{graphicx, color}
+\usepackage{pdfpages}
+\DeclareGraphicsExtensions{.jpg,.png}
+\pdfoutput=1
+\usepackage[pdftex,
+	bookmarks = true,           % Signets
+	bookmarksnumbered = true,   % Signets numerotes
+	pdfstartview = FitV,        % La page prend toute la hauteur
+	colorlinks=true,
+	citecolor=black,urlcolor=blue,linkcolor=red,
+	pdfauthor={Auteur},
+	pdftitle={Titre},
+ 	pdfsubject={Sujet},
+%	pdfkeywords={},	% Besoin de keywords ?
+	plainpages=false,
+	pdfpagelabels,
+	breaklinks=true,
+   	hyperindex,
+	linktocpage=true	% pour colorier seulement le numéros dans la TOC	
+]{hyperref}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+
+\begin{document}
+%\rmfamily
+
+\input{title.tex}
+
+%\begin{abstract} 
+%\end{abstract} 
+
+%{\bf Keywords:} \newline
+
+
+\clearpage
+
+\section{Introduction}
+Le but de ce TP est de comparer le codage de Huffman au codage arithmétique. Pour cela, nous avons travaillé sur une image ('lena.bmp') en niveaux de gris, ce qui permet de fixer une valeur (entre 0 et 255) pour chaque pixel de l'image. Depuis les probabilités des pixels, que nous avons calculé via un histogramme (cf. TP précédent), nous avons implémenté les deux algorithmes.
+
+\section{Codeur de Huffman}
+
+\section{Codeur arithmétique}
+
+\section{Conclusion}
+
+\end{document}
