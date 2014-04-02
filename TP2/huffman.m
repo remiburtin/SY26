@@ -1,5 +1,5 @@
 function compression = huffman(path)
-global prob avglen dict;
+global prob avglen dict histogramme;
 
 % matrice de l'image
 disp(['Lecture de l''image ' path]);

@@ -88,14 +88,18 @@ showstringspaces=false}
 L'objectif de ce TP est de comparer le codage de Huffman au codage arithmétique. Pour cela, nous travaillons sur une image ('lena.bmp') en niveaux de gris, ce qui permet de fixer une seule valeur (entre 0 et 255) pour chaque pixel de l'image. Depuis les probabilités des pixels, que nous avons calculé via un histogramme (cf. TP précédent), nous avons implémenté les deux algorithmes, puis calculé le taux de compression de chacun.
 
 \section{Codeur de Huffman}
-Afin de réaliser l'encodage, il est nécessaire de connaître la distribution de probabilités des niveaux de gris de l'image. Pour cela, nous commençons par réaliser l'histogramme comptant le nombre d'occurrences de chaque valeur de gris.
+L'image que nous manipulons pour réaliser l'encodage/décodage selon Huffman ne contient qu'une seule composante correspondant à l'intensité du gris. Pour convertir une image couleur en niveaux de gris, nous utilisons la fonction \textit{rgb2gray} qui retourne une matrice à deux dimensions, de même taille que l'image.\\
+
+Afin de réaliser l'encodage, il est nécessaire de connaître la distribution de probabilités des niveaux de gris de l'image. Pour cela, nous commençons par réaliser l'histogramme comptant le nombre d'occurrences de chaque valeur de gris. L'histogramme est en fait un vecteur de taille 256, ce qui correspond aux différentes valeurs de gris. Ainsi, à l'index $x\in[0, 255]$, nous obtenons le nombre d'occurences de cette intensité de gris dans l'image. Afin d'obtenir une distribution de probabilités ($\sum P(X=x_{i}) = 1$), nous normalisons l'histogramme en divisant chaque valeur de l'histogramme par le nombre total de pixels dans l'image. \\
 
 \begin{figure}[h]
 \begin{center}
-	 \includegraphics[scale=0.5]{../proba.jpg}
+	 \includegraphics[scale=0.6]{../proba.jpg}
 	 \caption{\label{probaGris} Distribution de probabilités, niveaux de gris}
 \end{center}
 \end{figure}
+
+
 
 
 \section{Codeur arithmétique}
