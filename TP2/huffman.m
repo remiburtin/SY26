@@ -7,7 +7,6 @@ img = imread(path);
 
 % initialisation vecteurs
 histogramme = zeros(1,256); % occurences par niveaux de gris
-prob = zeros(1,256); % probas (histo normalise)
 
 composantes = size(img, 3); % Taille de la 3eme dimension 
 
@@ -24,26 +23,43 @@ for i=1:dim,
     histogramme(round(list(i))) = histogramme(round(list(i))) + 1;
 end
 
-% creation probas des niveaux de gris
+%Suppression des zéros
+[val, index] = find (histogramme ~= 0) ;
+histo_0 = histogramme(index);
+
+prob = zeros(1,length(histo_0)); % probas (histo normalise)
+
 disp('Creation vecteur des probalites des niveaux de gris');
-for i=1:256,
-    prob(i) = histogramme(i)/dim;
+for i=1:length(histo_0),
+    prob(i) = histo_0(i)/dim;
 end
 
-% creation vecteur de taille 256 [1, 2, 3, ... 256]
-% correspond aux niveaux de gris
 disp('Creation du vecteurs des differents symboles');
-symbols = [1:256];
+symbols = [1:length(histo_0)];
 
-% creation du dictionnaire
 disp('Creation du dictionnaire (via huffmandict())');
 [dict,avglen] = huffmandict(symbols,prob); 
 disp(['Longueur moyenne des mots encodes : ' num2str(avglen)])
 
+%Création des tables de correspondance
+%pour pouvoir retrouver plus tard les bonnes 
+%valeurs des différents pixels
+corres = zeros(1, 256);
+
+for i=1:length(index),
+    corres(index(i)) = i;
+end
+
+list_0 = zeros(1,dim);
+
+for i=1:dim,
+    list_0(i) = corres(list(i));
+end
+
 % encodage de l'image (passer un vecteur ligne)
 disp('Encodage de l''image');
 tic % calcul du temps d'encodage/decodage
-enco = huffmanenco (list, dict);
+enco = huffmanenco (list_0, dict);
 
 % decodage (retourne un vecteur)
 disp('Decodage de l''image');
@@ -51,8 +67,14 @@ deco = huffmandeco(enco, dict);
 time = toc;
 disp(['Duree encodage/decodage : ' num2str(time) 's.']);
 
+%on remet les bonnes valeurs des pixels
+deco_2 = zeros(1,dim);
+for i=1:dim,
+    deco_2(i) = index(deco(i));
+end
+
 % reshape vecteur -> image 2D
-imagedeco = reshape(deco, size(img,1), size(img,2));
+imagedeco = reshape(deco_2, size(img,1), size(img,2));
 
 imshow(imagedeco/256);
 
