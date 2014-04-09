@@ -16,7 +16,7 @@ end
 dim = size(img,1)*size(img,2); % nombre de pixels dans l'image
 list=reshape(double(img), 1, dim); % images en ligne (vecteur)
 
-% création histogramme
+% creation histogramme
 for i=1:dim,
     histogramme(round(list(i))) = histogramme(round(list(i))) + 1;
 end
@@ -25,7 +25,6 @@ histogramme
 
 [val, index] = find (histogramme ~= 0) ;
 histo_0 = histogramme(index);
-%alphabet = linspace(1, length(histo_0), length(histo_0));
 
 corres = zeros(1, 256);
 
