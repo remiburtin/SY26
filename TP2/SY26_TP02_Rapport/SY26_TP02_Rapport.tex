@@ -170,6 +170,35 @@ Taux de compression : 1 - longueur moyenne mot code / 8 = 0.066566
 
 \section{Conclusion}
 
+\begin{table}[!h]
+	\centering
+		\begin{tabular}{l|c | c|}
+			\cline{2-3}
+			                                   & lena.bmp (256*256) & peppers.tif (512*512) \\
+			\hline
+			\multicolumn{1}{|l|}{Huffman}      & 112.52s            & 483.36s               \\
+			\hline
+			\multicolumn{1}{|l|}{Arithmétique} & 7.63s              & 30.95s                \\
+			\hline
+		\end{tabular}
+	\caption{Temps d'éxectution}
+	\label{tab:TableTempsExec}
+\end{table}
+
+\begin{table}[!h]
+	\centering
+		\begin{tabular}{l|c | c|}
+			\cline{2-3}
+			                                   & lena.bmp (256*256) & peppers.tif (512*512) \\
+			\hline
+			\multicolumn{1}{|l|}{Huffman}      & 6.66 \%            & 4.77 \%               \\
+			\hline
+			\multicolumn{1}{|l|}{Arithmétique} & 6.95 \%            & 5.09 \%               \\
+			\hline
+		\end{tabular}
+	\caption{Taux de compression}
+	\label{tab:TableTauxCompress}
+\end{table}
 
 \clearpage
 \appendix
