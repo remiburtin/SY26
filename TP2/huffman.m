@@ -1,5 +1,5 @@
 function compression = huffman(path)
-global prob avglen dict histogramme;
+global prob avglen dict histogramme histo_0 corres index;
 
 % matrice de l'image
 disp(['Lecture de l''image ' path]);
@@ -18,32 +18,32 @@ end
 dim = size(img,1)*size(img,2); % nombre de pixels dans l'image
 list=reshape(double(img), 1, dim); % images en ligne (vecteur)
 
-% creation histogramme
+% Creation histogramme
 for i=1:dim,
     histogramme(round(list(i))) = histogramme(round(list(i))) + 1;
 end
 
-%Suppression des zéros
+% Suppression des zéros
 [val, index] = find (histogramme ~= 0) ;
 histo_0 = histogramme(index);
 
-prob = zeros(1,length(histo_0)); % probas (histo normalise)
+prob = zeros(1,length(histo_0)); % initialisation "prob" (histo normalise)
 
 disp('Creation vecteur des probalites des niveaux de gris');
 for i=1:length(histo_0),
     prob(i) = histo_0(i)/dim;
 end
 
-disp('Creation du vecteurs des differents symboles');
+disp(['Creation du vecteurs des differents symboles, nombre de symboles : ' num2str(length(histo_0))]);
 symbols = [1:length(histo_0)];
 
 disp('Creation du dictionnaire (via huffmandict())');
 [dict,avglen] = huffmandict(symbols,prob); 
 disp(['Longueur moyenne des mots encodes : ' num2str(avglen)])
 
-%Création des tables de correspondance
-%pour pouvoir retrouver plus tard les bonnes 
-%valeurs des différents pixels
+% Creation des tables de correspondance
+% pour pouvoir retrouver plus tard les bonnes 
+% valeurs des différents pixels
 corres = zeros(1, 256);
 
 for i=1:length(index),
@@ -67,7 +67,7 @@ deco = huffmandeco(enco, dict);
 time = toc;
 disp(['Duree encodage/decodage : ' num2str(time) 's.']);
 
-%on remet les bonnes valeurs des pixels
+% on remet les bonnes valeurs des pixels
 deco_2 = zeros(1,dim);
 for i=1:dim,
     deco_2(i) = index(deco(i));
