@@ -20,7 +20,7 @@ list=reshape(double(img), 1, dim); % images en ligne (vecteur)
 
 % Creation histogramme
 for i=1:dim,
-    histogramme(round(list(i))) = histogramme(round(list(i))) + 1;
+    histogramme(round(list(i))+1) = histogramme(round(list(i))+1) + 1;
 end
 
 % Suppression des zeros
@@ -54,7 +54,7 @@ end
 list_0 = zeros(1,dim);
 
 for i=1:dim,
-    list_0(i) = corres(list(i));
+    list_0(i) = corres(list(i)+1);
 end
 
 % encodage de l'image (passer un vecteur ligne)

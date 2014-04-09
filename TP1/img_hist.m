@@ -12,7 +12,7 @@ dim = size(img,1)*size(img,2);
 list=reshape(double(img), 1, dim);
 
 for i=1:dim,
-    histogramme(round(list(i))) = histogramme(round(list(i))) + 1;
+    histogramme(round(list(i))+1) = histogramme(round(list(i))+1) + 1;
 end
 
 return;

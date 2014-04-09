@@ -20,7 +20,7 @@ list=reshape(double(img), 1, dim); % images en ligne (vecteur)
 
 % creation histogramme
 for i=1:dim,
-    histogramme(round(list(i))) = histogramme(round(list(i))) + 1;
+    histogramme(round(list(i))+1) = histogramme(round(list(i))+1) + 1;
 end
 
 [val, index] = find (histogramme ~= 0) ;
@@ -35,7 +35,7 @@ end
 list_0 = zeros(1,dim);
 
 for i=1:dim,
-    list_0(i) = corres(list(i));
+    list_0(i) = corres(list(i)+1);
 end
 
 disp('Encodage de l''image');
