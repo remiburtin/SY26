@@ -23,7 +23,7 @@ for i=1:dim,
     histogramme(round(list(i))) = histogramme(round(list(i))) + 1;
 end
 
-% Suppression des zéros
+% Suppression des zeros
 [val, index] = find (histogramme ~= 0) ;
 histo_0 = histogramme(index);
 
@@ -34,7 +34,8 @@ for i=1:length(histo_0),
     prob(i) = histo_0(i)/dim;
 end
 
-disp(['Creation du vecteurs des differents symboles, nombre de symboles : ' num2str(length(histo_0))]);
+disp('Creation du vecteurs des differents symboles')
+disp(['(nombre de symboles : ' num2str(length(histo_0)) ')']);
 symbols = [1:length(histo_0)];
 
 disp('Creation du dictionnaire (via huffmandict())');
@@ -43,7 +44,7 @@ disp(['Longueur moyenne des mots encodes : ' num2str(avglen)])
 
 % Creation des tables de correspondance
 % pour pouvoir retrouver plus tard les bonnes 
-% valeurs des différents pixels
+% valeurs des differents pixels
 corres = zeros(1, 256);
 
 for i=1:length(index),
