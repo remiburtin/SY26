@@ -142,6 +142,8 @@ L'index de l'histogramme sans zéro correspond à un symbole lors de la créatio
 	\label{tab:TableDeCorrespondance}
 \end{table}
 
+Une fois le dictionnaire créé, nous devons adapter les niveaux de gris présents dans l'image pour qu'ils correspondent aux symboles passées lors de l'encodage. Pour cela, nous utilisons la table de correspondance. En suivant l'exemple ci-dessus, nous voyons que les pixels de niveau de gris 3 doivent être remplacés par 1. \\
+
 Une fois le dictionnaire créé, nous pouvons encoder via la fonction \textit{huffmanenco}. La fonction reçoit l'image dans un vecteur ligne ainsi que le dictionnaire comprenant la valeur d'encodage de chaque symbole. Elle nous retourne l'image encodé (soit une image compressée). \\
 
 Nous décodons ensuite afin de retrouver l'image originale. La fonction \textit{huffmandeco} permet de retrouver le vecteur ligne correspondant à l'image originale. Comme nous l'avons vu, et d'après l'exemple, une valeur décodée égale à 1 correspond à un niveau de gris de 3. Nous devons alors faire la conversion de chacune des valeurs du vecteur ligne vers sa valeur de gris associée. Ensuite, nous reconstruisons l'image à partir du vecteur colonne vers une matrice 2D, grâce à la fonction \textit{reshape}. L'image peut ensuite être affichée.\\
@@ -179,13 +181,25 @@ Plus le taux de compression est important, plus l'image est compressée. \\
 
 \section{Codeur arithmétique}
 
-Pour le codage arithmétique, nous devons effectuer le même travail préliminaire que pour le codage de Huffman. Nous calculons l'histogramme, puis nous supprimons les valeurs ne possédant aucune occurence dans l'image. Il faut donc ensuite recalculer la valeur de chaque pixel en fonction des valeurs que l'on a supprimées (cf. Table \ref{tab:Histogrammes}).\\
+\subsection{Mise en oeuvre}
 
-Pour encoder l'image il suffit d'appeler la fonction \textbf{arithenco} en lui passant en paramètre un vecteur contenant les valeurs des pixels recalculées (suite à la suppression des 0 de l'histogramme) et l'histogramme normalisé. \textbf{arithenco} nous retourne alors un vecteur de bit qui représente l'image encodée.\\
+L'algorithme du codeur arithmétique est simple à mettre en oeuvre dans la mesure où le travail effectué précédemment est largement utilisé. \\
 
-Pour le décodage, on appelle \textbf{arithdeco} en passant en paramètre le vecteur de bit retourné par \textbf{arithenco}, l'histogramme normalisé et le nombre de pixels composant l'image. \\
+La fonction d'encodage, \textit{arithenco}, prend comme paramètres l'image ainsi que l'histogramme sans zéro. Ici, nous n'avons pas besoin de normaliser l'histogramme, mais la fonction n'accepte pas d'effectifs nuls pour un index de l'histogramme. Nous supprimons donc tous les zéros de l'histogramme et créons une table de correspondance, de la même manière que pour le codeur de Huffman, voir tableaux \ref{tab:Histogrammes} et \ref{tab:TableDeCorrespondance}. L'image est modifiée : les niveaux de gris de l'image sont remplacés par les symboles correspondants. La fonction retourne l'image encodée.\\
 
-Il faut ensuite recalculer la véritable valeur des pixels grâce aux tables mises en places avant de faire l'encodage et transformer le vecteur de pixel retourné par \textbf{arithdeco} en matrice pour pouvoir afficher l'image.
+La fonction de décodage, \textit{arithdeco}, prend comme paramètres l'image encodée, l'histogramme des probabilités sans zéro ainsi que la taille de l'image. Elle retourne l'image décodée qui doit bien sûr être convertie via la table de correspondance afin de retrouver tous les niveaux de gris originaux. \\
+
+\subsection{Résultats}
+
+\begin{verbatim}
+>> arith('../lena.bmp')
+Lecture de l'image ../lena.bmp
+Image couleur : conversion en gris
+Encodage de l'image
+Decodage de l'image
+Duree encodage/decodage : 14.552s.
+Taux de compression : 1 - taille finale / taille initiale = 0.069527
+\end{verbatim}
 
 \section{Conclusion}
 
@@ -195,12 +209,12 @@ Il faut ensuite recalculer la véritable valeur des pixels grâce aux tables mis
 			\cline{2-3}
 			                                   & lena.bmp (256*256) & peppers.tif (512*512) \\
 			\hline
-			\multicolumn{1}{|l|}{Huffman}      & 112.52s            & 483.36s               \\
+			\multicolumn{1}{|l|}{Huffman}      & 156.7178s            & 483.36s               \\
 			\hline
-			\multicolumn{1}{|l|}{Arithmétique} & 7.63s              & 30.95s                \\
+			\multicolumn{1}{|l|}{Arithmétique} & 14.552s              & 30.95s                \\
 			\hline
 		\end{tabular}
-	\caption{Temps d'éxectution}
+	\caption{Temps d’exécution}
 	\label{tab:TableTempsExec}
 \end{table}
 
