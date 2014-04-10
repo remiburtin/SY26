@@ -58,7 +58,7 @@ imagedeco = reshape(deco_2, size(img,1), size(img,2));
 imshow(imagedeco/256);
 
 compression = 1-length(code)/(dim*8);
-disp(['Taux de compression : 1 - taille finale / taille initiale = ' num2str(compression)]);
+disp(['Taux de compression : ' num2str(compression)]);
 
 
 return;

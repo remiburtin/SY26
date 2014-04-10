@@ -80,10 +80,10 @@ imagedeco = reshape(deco_2, size(img,1), size(img,2));
 imshow(imagedeco/256);
 
 compression = 1-length(enco)/(dim*8);
-disp(['Taux de compression : 1 - taille finale / taille initiale = ' num2str(compression)]);
-
+disp('Taux de compression : ');
+disp(['1 - taille finale / taille initiale = ' num2str(compression)]);
 compression2 = 1-avglen/8;
-disp(['Taux de compression : 1 - longueur moyenne mot code / 8 = ' num2str(compression2)]);
+disp(['1 - longueur moyenne mot code / 8 = ' num2str(compression2)]);
 
 return;
 end

@@ -1,5 +1,6 @@
 \documentclass[a4paper, 12pt]{article}
 \usepackage[utf8]{inputenc}  % Unicode
+\usepackage[french]{babel}
 \usepackage{geometry}
 \usepackage{graphics}
 \usepackage[pdftex]{graphicx, color}
@@ -11,7 +12,7 @@
 	bookmarksnumbered = true,   % Signets numerotes
 	pdfstartview = FitV,        % La page prend toute la hauteur
 	colorlinks=true,
-	citecolor=black,urlcolor=blue,linkcolor=red,
+	citecolor=black,urlcolor=blue,linkcolor=black,
 	pdfauthor={Auteur},
 	pdftitle={Titre},
  	pdfsubject={Sujet},
@@ -24,9 +25,6 @@
 ]{hyperref}
 \usepackage{float}
 \usepackage{listings}
-\usepackage[french]{babel}
-
-\geometry{left=18mm,right=18mm,top=21mm,bottom=21mm}
 
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
@@ -90,9 +88,9 @@ L'objectif de ce TP est de comparer le codage de Huffman au codage arithmétique
 
 \subsection{Mise en oeuvre}
 
-L'image que nous manipulons pour réaliser l'encodage/décodage selon Huffman ne contient qu'une seule composante correspondant à l'intensité du gris. Pour convertir une image couleur en niveaux de gris, nous utilisons la fonction \textit{rgb2gray} qui retourne une matrice à deux dimensions, de même taille que l'image.\\
+L'image que nous manipulons pour réaliser l'encodage/décodage selon Huffman ne contient qu'une seule composante correspondant à l'intensité du gris. L'image originale étant en couleurs, nous la convertissons en utilisant la fonction \textit{rgb2gray} qui retourne une matrice à deux dimensions, de même taille que l'image.\\
 
-Afin de réaliser l'encodage, il est nécessaire de connaître la distribution de probabilités des niveaux de gris de l'image. Pour cela, nous commençons par réaliser l'histogramme comptant le nombre d'occurrences de chaque valeur de gris. L'histogramme est en fait un vecteur de taille 256, ce qui correspond aux différentes valeurs de gris. Ainsi, à l'index $x\in[1, 256]$, nous obtenons le nombre d’occurrences de cette intensité de gris dans l'image. Afin d'obtenir une distribution de probabilités ($\sum P(X=x_{i}) = 1$), nous normalisons l'histogramme en divisant chaque valeur de l'histogramme par le nombre total de pixels dans l'image. \\
+Afin de réaliser l'encodage, il est nécessaire de connaître la loi de probabilités des niveaux de gris de l'image. Pour cela, nous commençons par réaliser l'histogramme comptant le nombre d'occurrences (l'effectif) de chaque valeur de gris. L'histogramme est en fait un vecteur de taille 256, ce qui correspond aux différentes valeurs de gris. Ainsi, à l'index $x\in[1, 256]$, nous obtenons le nombre d’occurrences de l'intensité de gris égale à $x-1$ dans l'image (le gris est codé sur un octet, donc sa valeur est comprise entre 0 et 255). Afin d'obtenir une fonction densité de probabilités ($\sum P(X=x_{i}) = 1$), nous normalisons l'histogramme en divisant chacune de ses valeurs par le nombre total de pixels dans l'image. \\ 
 
 \begin{figure}[H]
 \begin{center}
@@ -101,9 +99,10 @@ Afin de réaliser l'encodage, il est nécessaire de connaître la distribution d
 \end{center}
 \end{figure}
 
-L'algorithme d'Huffman fonctionne de sorte que les symboles ayant la moins grande probabilité prennent des valeurs les plus grande dans le dictionnaire, afin d'améliorer la compression. Dans le cas de notre image, beaucoup d'intensités de gris n'apparaissent pas dans l'image : elles correspondent aux indexes de l'histogramme ayant pour valeur 0. Afin de supprimer ces valeurs inutiles lors de la création du dictionnaire, nous créons un nouvel histogramme, ayant des valeurs toutes strictement positives. Ce nouvel histogramme pourra alors avoir à l'index 1, le niveaux de gris 30. (si les 30 premiers niveaux de gris n'apparaissent pas dans l'image). Afin de reconstruire l'image originale après encodage/décodage, nous devons alors établir une table de correspondance. Ainsi, chaque index de l'histogramme devra être lié à une valeur d'un niveaux de gris présent dans l'image. \\
+L'algorithme d'Huffman fonctionne de sorte que les symboles ayant la plus grande probabilité utilisent le moins de ressources afin d'utiliser le moins de bande passante possible, et vice-versa, afin d'améliorer la compression. Dans le cas de notre image, beaucoup d'intensités de gris n'apparaissent pas dans l'image (leur probabilité d'apparition est alors nulle) : elles correspondent aux indexes de l'histogramme ayant pour valeur 0 (\textit{cf. figure \ref{probaGris}}). Afin de supprimer ces valeurs inutiles et qui utiliseront beaucoup de ressources, nous créons un nouvel histogramme, ayant des valeurs toutes strictement positives. Afin de reconstruire l'image originale après encodage/décodage, nous devons alors établir une table de correspondance. Ainsi, chaque index de l'histogramme sans zéro devra être lié à sa valeur de gris présent dans l'image. \\
 
-Selon la longueur de l'histogramme sans zéro, nous créons un dictionnaire avec les nouveaux symboles allant de 0 à L, L étant la taille du nouvel histogramme. Dans le tableau~\ref{tab:Histogrammes} page~\pageref{tab:Histogrammes}, nous associons le nombre d'occurrences de chaque niveaux de gris. Afin de construire le dictionnaire via le codeur de Huffman, nous devons créer les probabilités qui en découle (en normalisant l'histogramme). Chaque effectif est alors divisé par le nombre total des effectifs, soit ici le nombre de pixels. \\
+Selon la longueur de l'histogramme sans zéro, nous créons un dictionnaire avec les nouveaux symboles allant de 0 à L, L étant la taille du nouvel histogramme. Dans le tableau~\ref{tab:Histogrammes} page~\pageref{tab:Histogrammes}, nous ne conservons que les niveaux de gris présents dans l'image, nous voyons que l'index dans le nouvel histogramme ne correspond plus au niveaux de gris. Une table de correspondance est alors créée, \textit{cf. tableau \ref{tab:TableDeCorrespondance}}.
+Afin de construire le dictionnaire via le codeur de Huffman, nous devons créer les probabilités qui en découle (en normalisant l'histogramme). Chaque effectif est alors divisé par le nombre total des effectifs, soit ici le nombre de pixels. \\
 
 \begin{table}[!h]
 	\centering
@@ -124,11 +123,9 @@ Selon la longueur de l'histogramme sans zéro, nous créons un dictionnaire avec
 		\end{tabular}
 	\caption{Exemple - Histogrammes}
 	\label{tab:Histogrammes}
-	\vspace{1cm}
 \end{table}
 
-
-
+L'index de l'histogramme sans zéro correspond à un symbole lors de la création du dictionnaire par la fonction \textit{huffmandict}. \\
 
 \begin{table}[!h]
 	\centering
@@ -144,8 +141,12 @@ Selon la longueur de l'histogramme sans zéro, nous créons un dictionnaire avec
 	\caption{Exemple - Table de correspondance}
 	\label{tab:TableDeCorrespondance}
 \end{table}
+\\
+Une fois le dictionnaire créé, nous pouvons encoder via la fonction \textit{huffmanenco}. La fonction reçoit l'image dans un vecteur ligne ainsi que le dictionnaire comprenant la valeur d'encodage de chaque symbole. Elle nous retourne l'image encodé (soit une image compressée). \\
 
-	L'index de l'histogramme sans zéro correspond à un symbole lors de la création du dictionnaire par la fonction \textit{huffmandict}.
+Nous décodons ensuite afin de retrouver l'image originale. La fonction \textit{huffmandeco} permet de retrouver le vecteur ligne correspondant à l'image originale. Comme nous l'avons vu, et d'après l'exemple, une valeur décodée égale à 1 correspond à un niveau de gris de 3. Nous devons alors faire la conversion de chacune des valeurs du vecteur ligne vers sa valeur de gris associée. Ensuite, nous reconstruisons l'image à partir du vecteur colonne vers une matrice 2D, grâce à la fonction \textit{reshape}. L'image peut ensuite être affichée.\\
+
+Le script du codeur de Huffman est présent en annexe \ref{algohuffman}.
 
 
 \subsection{Résultats}
@@ -157,16 +158,30 @@ Nous affichons un log grâce à la fonction \textit{disp} :
 Lecture de l'image ../lena.bmp
 Image couleur : conversion en gris
 Creation vecteur des probalites des niveaux de gris
-Creation du vecteurs des differents symboles, nombre de symboles : 217
+Creation du vecteurs des differents symboles
+(nombre de symboles : 217)
 Creation du dictionnaire (via huffmandict())
 Longueur moyenne des mots encodes : 7.4675
 Encodage de l'image
 Decodage de l'image
-Duree encodage/decodage : 131.098s.
-Taux de compression : 1 - taille finale / taille initiale = 0.066566
-Taux de compression : 1 - longueur moyenne mot code / 8 = 0.066566
+Duree encodage/decodage : 156.7178s.
+Taux de compression : 
+1 - taille finale / taille initiale = 0.066566
+1 - longueur moyenne mot code / 8 = 0.066566
 \end{verbatim}
+
+\\
+
+Nous voyons qu'il est possible de calculer le taux de compression uniquement via création du dictionnaire de symboles. L'algorithme retourne la longueur moyenne des mots. Cette moyenne étant pondérée par la probabilité certaine d'apparition des mots, nous pouvons utiliser cette valeur pour calculer la taille finale (après encodage) en la multipliant par le nombre de mots qui correspond ici au nombre de pixels dans l'image.\\
+
+L'autre méthode consiste à comparer la taille de l'image encodée à la taille de l'image source. Dans notre cas, l'image encodée est un vecteur de bits. L'image source est elle un vecteur d'octets, sa taille en bits correspond donc à la taille de l'image multipliée par 8.\\
+
+Plus le taux de compression est important, plus l'image est compressée. \\
+
+
 \section{Codeur arithmétique}
+
+
 
 \section{Conclusion}
 
