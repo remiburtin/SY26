@@ -141,7 +141,7 @@ L'index de l'histogramme sans zéro correspond à un symbole lors de la créatio
 	\caption{Exemple - Table de correspondance}
 	\label{tab:TableDeCorrespondance}
 \end{table}
-\\
+
 Une fois le dictionnaire créé, nous pouvons encoder via la fonction \textit{huffmanenco}. La fonction reçoit l'image dans un vecteur ligne ainsi que le dictionnaire comprenant la valeur d'encodage de chaque symbole. Elle nous retourne l'image encodé (soit une image compressée). \\
 
 Nous décodons ensuite afin de retrouver l'image originale. La fonction \textit{huffmandeco} permet de retrouver le vecteur ligne correspondant à l'image originale. Comme nous l'avons vu, et d'après l'exemple, une valeur décodée égale à 1 correspond à un niveau de gris de 3. Nous devons alors faire la conversion de chacune des valeurs du vecteur ligne vers sa valeur de gris associée. Ensuite, nous reconstruisons l'image à partir du vecteur colonne vers une matrice 2D, grâce à la fonction \textit{reshape}. L'image peut ensuite être affichée.\\
@@ -170,8 +170,6 @@ Taux de compression :
 1 - longueur moyenne mot code / 8 = 0.066566
 \end{verbatim}
 
-\\
-
 Nous voyons qu'il est possible de calculer le taux de compression uniquement via création du dictionnaire de symboles. L'algorithme retourne la longueur moyenne des mots. Cette moyenne étant pondérée par la probabilité certaine d'apparition des mots, nous pouvons utiliser cette valeur pour calculer la taille finale (après encodage) en la multipliant par le nombre de mots qui correspond ici au nombre de pixels dans l'image.\\
 
 L'autre méthode consiste à comparer la taille de l'image encodée à la taille de l'image source. Dans notre cas, l'image encodée est un vecteur de bits. L'image source est elle un vecteur d'octets, sa taille en bits correspond donc à la taille de l'image multipliée par 8.\\
@@ -181,7 +179,13 @@ Plus le taux de compression est important, plus l'image est compressée. \\
 
 \section{Codeur arithmétique}
 
+Pour le codage arithmétique, nous devons effectuer le même travail préliminaire que pour le codage de Huffman. Nous calculons l'histogramme, puis nous supprimons les valeurs ne possédant aucune occurence dans l'image. Il faut donc ensuite recalculer la valeur de chaque pixel en fonction des valeurs que l'on a supprimées (cf. Table \ref{tab:Histogrammes}).\\
 
+Pour encoder l'image il suffit d'appeler la fonction \textbf{arithenco} en lui passant en paramètre un vecteur contenant les valeurs des pixels recalculées (suite à la suppression des 0 de l'histogramme) et l'histogramme normalisé. \textbf{arithenco} nous retourne alors un vecteur de bit qui représente l'image encodée.\\
+
+Pour le décodage, on appelle \textbf{arithdeco} en passant en paramètre le vecteur de bit retourné par \textbf{arithenco}, l'histogramme normalisé et le nombre de pixels composant l'image. \\
+
+Il faut ensuite recalculer la véritable valeur des pixels grâce aux tables mises en places avant de faire l'encodage et transformer le vecteur de pixel retourné par \textbf{arithdeco} en matrice pour pouvoir afficher l'image.
 
 \section{Conclusion}
 
@@ -214,6 +218,8 @@ Plus le taux de compression est important, plus l'image est compressée. \\
 	\caption{Taux de compression}
 	\label{tab:TableTauxCompress}
 \end{table}
+
+On peut observer que le codeur arithmétique donne de meilleurs résultats que le codeur de Huffman. Les taux de compression sont quasiment égaux, alors que les temps d'encodage + décodage différent d'un facteur 16.
 
 \clearpage
 \appendix
