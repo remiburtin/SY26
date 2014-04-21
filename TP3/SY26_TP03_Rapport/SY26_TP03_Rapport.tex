@@ -1,0 +1,144 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage[utf8]{inputenc}  % Unicode
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{graphics}
+\usepackage[pdftex]{graphicx, color}
+\usepackage{pdfpages}
+\DeclareGraphicsExtensions{.jpg,.png}
+\pdfoutput=1
+\usepackage[pdftex,
+	bookmarks = true,           % Signets
+	bookmarksnumbered = true,   % Signets numerotes
+	pdfstartview = FitV,        % La page prend toute la hauteur
+	colorlinks=true,
+	citecolor=black,urlcolor=blue,linkcolor=black,
+	pdfauthor={Auteur},
+	pdftitle={Titre},
+ 	pdfsubject={Sujet},
+%	pdfkeywords={},	% Besoin de keywords ?
+	plainpages=false,
+	pdfpagelabels,
+	breaklinks=true,
+   	hyperindex,
+	linktocpage=true	% pour colorier seulement le numéros dans la TOC	
+]{hyperref}
+\usepackage{float}
+\usepackage{listings}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\newcommand*\styleC{\fontsize{9}{10pt}\selectfont }
+\newcommand*\styleD{\fontsize{9}{10pt}\usefont{OT1}{pag}{m}{n}\selectfont }
+
+\makeatletter
+% on fixe le langage utilisé
+\lstset{language=matlab}
+\edef\Motscle{emph={\lst@keywords}}
+\expandafter\lstset\expandafter{%
+  \Motscle}
+\makeatother
+
+
+\definecolor{Ggris}{rgb}{0.45,0.48,0.45}
+
+\lstset{emphstyle=\ttfamily\color{blue}, % les mots réservés de matlab en bleu
+basicstyle=\ttfamily\styleC, % 
+keywordstyle=\ttfamily,
+commentstyle=\color{Ggris}\styleD, % \styleD commentaire en gris
+numberstyle=\tiny\color{black},
+numbers=left,
+numbersep=10pt,
+lineskip=0.7pt,
+showstringspaces=false}
+%  % inclure le fichier source
+\newcommand{\FSource}[1]{%
+\lstinputlisting[texcl=true]{#1}
+}
+
+%%%%%%%%%
+\textwidth=15cm
+\textheight=21cm
+%\hoffset=-2.5cm
+\tolerance=9000
+\hbadness=9000
+\pretolerance=2500
+
+
+\begin{document}
+%\rmfamily
+
+\input{title.tex}
+
+%\begin{abstract} 
+%\end{abstract} 
+
+%{\bf Keywords:} \newline
+
+
+\clearpage
+
+\section{Introduction}
+L'objectif de ce TP est de programmer l'algorithme itératif de Lloyd-Max pour la conception d'un quantificateur scalaire optimal.
+
+\section{Quantification uniforme}
+
+\subsection{Distorsion normalisée et rapport signal bruit}
+
+Ce premier script nous permet de calculer la distorsion normalisée (NMSE) ainsi que le rapport signal/bruit (SNR).
+
+Pour cela, nous utilisons la fonction \textit{lloyds} qui permet d'encoder un vecteur (ici une image en vecteur ligne) selon Lloyd-Max avec un nombre précis de partitions (correspondant aux nombre de valeurs de reconstruction). Cette fonction \textit{lloyds} retourne la distorsion (non normalisée). Afin de calculer la distorsion normalisée, nous devons diviser cette distorsion $D$ par la variance du vecteur passé à la fonction :
+		\[NMSE = \frac{D}{\sigma_X^2} 
+	\]
+
+
+\subsection{Résultats}
+
+Après avoir exécuté la fonction, nous nous rendons compte des résultats : 
+
+\begin{verbatim}
+>> [nmse snr] = disto_1_1('lena.bmp', 2)
+nmse = 0.3009
+snr = 5.2157
+
+>> [nmse snr] = disto_1_1('lena.bmp', 8)
+nmse = 0.0190
+snr = 17.2149
+
+>> [nmse snr] = disto_1_1('lena.bmp', 256)
+nmse = 0
+snr = Inf
+\end{verbatim}
+
+Lors de la première exécution, nous choisissons d'encoder l'image avec 2 valeurs différentes (correspondant à 2 niveaux de gris dans notre cas). La distorsion est donc importante, et maximale (il n'est pas possible et inutile d'encoder l'image avec 1 seule valeur car aucune information n'est conservée dans ce cas).
+
+Évidemment, dans le cas où nous encodons l'image avec 256 niveaux de gris (telle que l'image originale), aucune distorsion n'est présente.
+
+
+\section{Quantification scalaire optimale de Lloyd-Max}
+
+\subsection{Mise en oeuvre}
+
+
+
+\subsection{Tests sur les différentes images}
+
+\begin{verbatim}
+>> LOG
+\end{verbatim} \\
+
+\newpage
+
+\section{Conclusion}
+
+
+\clearpage
+\appendix
+
+\section{Codes source MATLAB}
+\subsection{NMSE et SNR}\label{nmse_snr_code}
+
+\FSource{../disto_1_1.m}
+
+
+\end{document}

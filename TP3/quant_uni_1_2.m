@@ -1,23 +1,3 @@
-% function [nmse snr] = disto(image, nbval)
-%     img = imread(image);
-%     composantes = size(img, 3);
-% 
-%     if (composantes == 3)
-%         img = rgb2gray(img);
-%     end
-% 
-%     dim = size(img,1)*size(img,2);
-%     list=reshape(double(img), 1, dim);
-%     
-%     [part, codebook, dist] = lloyds(list, nbval);
-%     
-%     nmse = dist/var(list);
-%     
-%     snr = -10*log10(nmse);
-%     
-%     return;
-% end
-
 function [image_quant disto] = quant_uni(image, debit)
     img = imread(image);
     composantes = size(img, 3);
