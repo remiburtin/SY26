@@ -25,6 +25,12 @@
 ]{hyperref}
 \usepackage{float}
 \usepackage{listings}
+\usepackage{alltt}
+\renewcommand{\ttdefault}{txtt}
+
+\lstset{basicstyle=\ttfamily,
+escapeinside={||},
+mathescape=true}
 
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
@@ -85,35 +91,76 @@ L'objectif de ce TP est de programmer l'algorithme itératif de Lloyd-Max pour l
 
 \subsection{Distorsion normalisée et rapport signal bruit}
 
-Ce premier script nous permet de calculer la distorsion normalisée (NMSE) ainsi que le rapport signal/bruit (SNR).
+Ce premier script nous permet de calculer la distorsion normalisée (NMSE) ainsi que le rapport signal/bruit (Signal to Noise Ratio - SNR).
 
 Pour cela, nous utilisons la fonction \textit{lloyds} qui permet d'encoder un vecteur (ici une image en vecteur ligne) selon Lloyd-Max avec un nombre précis de partitions (correspondant aux nombre de valeurs de reconstruction). Cette fonction \textit{lloyds} retourne la distorsion (non normalisée). Afin de calculer la distorsion normalisée, nous devons diviser cette distorsion $D$ par la variance du vecteur passé à la fonction :
 		\[NMSE = \frac{D}{\sigma_X^2} 
 	\]
 
 
-\subsection{Résultats}
+\subsubsection{R\'esultats}
+\label{sec:Resultats}
 
 Après avoir exécuté la fonction, nous nous rendons compte des résultats : 
 
-\begin{verbatim}
->> [nmse snr] = disto_1_1('lena.bmp', 2)
+\begin{alltt}
+>> [nmse snr] = disto_1_1('lena.bmp', \textbf{2})
 nmse = 0.3009
 snr = 5.2157
 
->> [nmse snr] = disto_1_1('lena.bmp', 8)
+>> [nmse snr] = disto_1_1('lena.bmp', \textbf{8})
 nmse = 0.0190
 snr = 17.2149
 
->> [nmse snr] = disto_1_1('lena.bmp', 256)
+>> [nmse snr] = disto_1_1('lena.bmp', \textbf{256})
 nmse = 0
 snr = Inf
-\end{verbatim}
+\end{alltt}
 
 Lors de la première exécution, nous choisissons d'encoder l'image avec 2 valeurs différentes (correspondant à 2 niveaux de gris dans notre cas). La distorsion est donc importante, et maximale (il n'est pas possible et inutile d'encoder l'image avec 1 seule valeur car aucune information n'est conservée dans ce cas).
 
 Évidemment, dans le cas où nous encodons l'image avec 256 niveaux de gris (telle que l'image originale), aucune distorsion n'est présente.
 
+
+\subsection{Quantification uniforme}
+\label{sec:quantif_uniforme}
+
+Nous allons maintenant programmer une fonction permettant la quantification uniforme d'une image à partir d'un débit, correspondant aux nombre valeurs de reconstruction. Cette fonction renvoie l'image quantifiée ainsi que la distorsion avec l'image originale. \\
+
+L'image originale utilisée sera ici en niveau de gris. Si l'image passée en paramètre de la fonction est une image en couleur, elle sera alors convertie via la fonction \textit{rgb2gray}. Le signal $X$ obtenu est alors borné entre la valeur minimum 0 et la valeur maximum 255 (domaine de variation). \\
+
+Nous allons utiliser la fonction \textit{quantiz} afin de quantifier uniformément l'image. Cette fonction permet de choisir les seuils de décision ainsi que les valeurs de reconstruction pour un signal donné.\\
+
+Pour quantifier uniformément le signal, nous allons construire $N$ niveaux de reconstruction ce qui nous permettra de définir nos seuils de décision. $N$ est ici fonction du débit binaire $R$ passé en paramètre de la fonction de quantification : $N=2^R$. Ainsi, nous devons construire $N+1$ seuils de décision. Afin de partitionner uniformément le domaine de variation, nous utilisons la fonction \textit{linspace} qui permet de créer un vecteur ayant des valeurs linéairement réparties entre une borne inférieure et une borne supérieure. La fonction \textit{quantiz} nous impose la suppression de ces bornes dans le vecteur des seuils de décision, comme énoncé dans la documentation de la fonction : 
+\begin{alltt}
+ Elements of INDX = 0, 1, 2, ..., N-1 represent SIG in the range of 
+[\textbf{-Inf, PARTITION(1)}], [PARTITION(1), PARTITION(2)], [PARTITION(2), 
+PARTITION(3)], ..., [\textbf{PARTITION(N-1), Inf}].
+\end{alltt}
+Ainsi, les deux bornes extrêmes seront automatiquement $-\infty$ et $+\infty$. La fonction \textit{linspace} a inclus les bornes dans le vecteur, nous devons donc supprimer les valeurs 0 et 255 de notre vecteur \verb+PARTITION+. \\
+
+Nous devons maintenant choisir nos valeurs de reconstruction $r_i, i\in[1, N]$. Lors d'une quantification uniforme, ces valeurs de reconstruction sont au milieu des seuils de décisions, soit la moyenne des seuils de décisions consécutifs : $r_i = (d_i + d_{i+1})/2$. Une boucle permet de construire un vecteur contenant les valeurs de reconstruction à partir du vecteur des seuils de reconstruction (\textit{cf} Annexe \ref{quant_uni_code}). L'image quantifiée est donc retournée par la fonction \textit{quantiz}, nous la reconstruisons ensuite afin d'obtenir une matrice, telle que l'image originale. Afin d'afficher l'image via la fonction \textit{imshow}, il faut diviser les valeurs de la matrice par 255. \\
+
+Nous exécutons la fonction dans MATLAB : 
+\begin{verbatim}
+[image_quant dist] = quant_uni_1_2('lena.bmp', 2);
+partition =
+   63.7500  127.5000  191.2500
+codebook =
+   31.8750   95.6250  159.3750  223.1250
+>> imshow(image_quant./255)
+>> dist
+dist = 331.5913
+\end{verbatim}
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[scale=0.7]{../lena_quant_4_niveaux.jpg}
+	\caption{Quantification uniforme, lena.bmp, débit = 2}
+	\label{fig:lena_quant_4_niveaux}
+\end{figure}
+
+Les valeurs de reconstruction sont au milieu de chaque intervalle. Ces intervalles sont répartis entre 0 et 255 ce qui implique qu'il est impossible de retrouver les valeurs de reconstruction 0 ou 255. La distorsion est donc dans tous les cas non nulle. \\
 
 \section{Quantification scalaire optimale de Lloyd-Max}
 
@@ -125,7 +172,7 @@ Lors de la première exécution, nous choisissons d'encoder l'image avec 2 valeu
 
 \begin{verbatim}
 >> LOG
-\end{verbatim} \\
+\end{verbatim} 
 
 \newpage
 
@@ -139,6 +186,12 @@ Lors de la première exécution, nous choisissons d'encoder l'image avec 2 valeu
 \subsection{NMSE et SNR}\label{nmse_snr_code}
 
 \FSource{../disto_1_1.m}
+
+\newpage
+
+\subsection{Quantification uniforme}\label{quant_uni_code}
+
+\FSource{../quant_uni_1_2.m}
 
 
 \end{document}
