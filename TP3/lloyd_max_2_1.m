@@ -22,7 +22,7 @@ function [image_quant disto] = quant_lloyd(image, debit)
     diffDisto = 9999;
     
     % Condition de convergence
-    while diffDisto > 0,1
+    while diffDisto > 0,1;
         %calcul des ri
         for j=1:(2^debit)
             v = find(list >= partition(j) & list <= partition(j+1));
@@ -48,7 +48,6 @@ function [image_quant disto] = quant_lloyd(image, debit)
         %Mise à jour condition d'arret
         diffDisto = oldDisto - disto;
         oldDisto = disto;
-        disto
     end
     
     % Reconstruction de l'image en vecteur
