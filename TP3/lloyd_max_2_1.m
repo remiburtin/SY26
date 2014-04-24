@@ -17,14 +17,14 @@ function [image_quant disto] = quant_lloyd(image, debit)
     end
     
     % Initialisation condition d'arret
-    oldDisto = 9999; % doit etre >> à la première disto calculee
-    diffDisto = 9999; % Doit etre > à 0.1 pour entrer dans la boucle
+    oldDisto = 9999; % doit etre >> a la premiere disto calculee
+    diffDisto = 9999; % Doit etre > a 0.1 pour entrer dans la boucle
     
     % Condition de convergence
     while diffDisto > 0,1;
         
         for j=1:(2^debit) %calcul des ri
-            % v = index des éléments appartenant à l'intervalle j dans list
+            % v = index des elements appartenant a l'intervalle j dans list
             v = find(list >= partition(j) & list <= partition(j+1));
             if (isempty(v)) % intervalle vide
                 codebook(j) = (partition(j) + partition(j + 1)) / 2;
@@ -42,7 +42,7 @@ function [image_quant disto] = quant_lloyd(image, debit)
         % Calcul de la distorsion
         disto = mean((list-image_quant).^2);
         
-        %Mise à jour condition d'arret
+        %Mise a jour condition d'arret
         diffDisto = oldDisto - disto;
         oldDisto = disto;
     end
