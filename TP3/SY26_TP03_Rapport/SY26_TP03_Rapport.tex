@@ -31,7 +31,7 @@
 \lstset{basicstyle=\ttfamily,
 escapeinside={||},
 mathescape=true}
-
+\setcounter{secnumdepth}{3}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
 \newcommand*\styleC{\fontsize{9}{10pt}\selectfont }
@@ -41,9 +41,10 @@ mathescape=true}
 % on fixe le langage utilisé
 \lstset{language=matlab}
 \edef\Motscle{emph={\lst@keywords}}
-\expandafter\lstset\expandafter{%
-  \Motscle}
+\expandafter\lstset\expandafter{
+}
 \makeatother
+
 
 
 \definecolor{Ggris}{rgb}{0.45,0.48,0.45}
@@ -89,7 +90,7 @@ L'objectif de ce TP est de programmer l'algorithme itératif de Lloyd-Max pour l
 
 \section{Quantification uniforme}
 
-\subsection{Distorsion normalisée et rapport signal bruit}
+\subsection{Distorsion normalisée et rapport signal bruit}\label{dist_nmse_snr}
 
 Ce premier script nous permet de calculer la distorsion normalisée (NMSE) ainsi que le rapport signal/bruit (Signal to Noise Ratio - SNR).
 
@@ -228,7 +229,7 @@ Pour initialiser l'algorithme, nous utilisons une simple quantification uniforme
 	\label{fig:lena_quant_4_niveaux}
 \end{figure}
 
-Contrairement à la quantification uniforme, il est possible via cet algorithme de retrouver une distorsion nulle. En effet, les valeurs de reconstruction (niveaux de gris) retrouvées pour un débit égal à 8 sont exactement les mêmes valeurs que pour l'image originale.
+Contrairement à la quantification uniforme, il est possible via cet algorithme de retrouver une distorsion nulle. En effet, les valeurs de reconstruction (niveaux de gris) retrouvées pour un débit égal à 8 sont exactement les mêmes valeurs que pour l'image originale (résultat que nous observons paragraphe \ref{dist_nmse_snr}).
 
 \subsection{Tests sur les différentes images}
 
@@ -242,7 +243,7 @@ Contrairement à la quantification uniforme, il est possible via cet algorithme 
 	\label{fig:comparaison_img_quant}
 \end{figure}
 
-Nous observons visuellement les différences de qualité entre les deux quantifications mises en oeuvre dans ce TP. La quantification uniforme apporte un contraste plus important qui vient biaiser les couleurs originales. La quantification scalaire optimale permet de retrouver des couleurs plus fidèles à l'image originale, avec des niveaux de gris moins saillants. En effet, les couleurs retrouvent plus facilement leur appartenance dans les classes qui ont été optimisées selon la densité, ce qui permet de retrouver des couleurs plus fidèles. Mathématiquement, cette qualité est démontrée par la minimisation de l'erreur quadratique que permet l'algorithme de Lloyd-Max :
+Nous observons visuellement les différences de qualité entre les deux quantifications mises en oeuvre dans ce TP (avec le même débit). La quantification uniforme apporte un contraste plus important qui vient biaiser les couleurs originales. La quantification scalaire optimale permet de retrouver des couleurs plus fidèles à l'image originale, avec des niveaux de gris moins saillants. En effet, les couleurs retrouvent plus facilement leur appartenance dans les classes qui ont été optimisées selon la densité, ce qui permet de retrouver des couleurs plus fidèles. Mathématiquement, cette qualité est démontrée par la minimisation de l'erreur quadratique que permet l'algorithme de Lloyd-Max :
 
 \begin{table}[!h]
 	\centering
@@ -267,11 +268,12 @@ Nous observons visuellement les différences de qualité entre les deux quantifi
 	\label{tab:TableComparaisonDisto}
 \end{table}
 
-Des écarts importants sont observés entre les distorsions des deux algorithmes mis en œuvre, pouvant aller du simple au double lorsque les niveaux de reconstruction de la quantification uniforme sont très mal choisis.
+Des écarts importants sont observés entre les distorsions des deux algorithmes mis en œuvre, pouvant aller du simple au double lorsque les niveaux de reconstruction de la quantification uniforme sont très mal choisis. \\
 
 
 \subsection{Huffman - Taux de compression des images quantifiées}
 
+Ci-dessous, un tableau récapitulatif des différents taux de compression des images quantifiées puis compressées en utilisant l'algorithme de Huffman.
 
 \begin{table}[H]
 	\centering
@@ -296,6 +298,8 @@ Des écarts importants sont observés entre les distorsions des deux algorithmes
 	\label{tab:TableComparaisonTauxCompression}
 \end{table}
 
+Évidemment, la compression d'images ayant peu de niveaux de gris est plus efficace, cependant, elle se fait au dépend de la qualité de l'image.
+
 \begin{figure}[H]
 	\centering
 		\includegraphics[width=12cm, height=10cm]{../taux_compression_vs_nb_bits.png}
@@ -303,11 +307,11 @@ Des écarts importants sont observés entre les distorsions des deux algorithmes
 	\label{fig:courbe_compression}
 \end{figure}
 
-
 \newpage
 
 \section{Conclusion}
 
+Ce TP nous a permis de se rendre compte de ce qu'implique la quantification. En effet, la distorsion du signal peut-être très importante et la qualité du signal est ainsi dégradée sévèrement. Cependant, nous avons vu qu'avec le même nombre de bits par pixel, il est possible de réduire significativement la distorsion, en appliquant une quantification intelligente qui permet de retrouver des niveaux de reconstruction en moyenne plus proches des valeurs réelles.
 
 \clearpage
 \appendix
