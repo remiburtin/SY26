@@ -302,8 +302,8 @@ Ci-dessous, un tableau récapitulatif des différents taux de compression des im
 
 \begin{figure}[H]
 	\centering
-		\includegraphics[width=12cm, height=10cm]{../taux_compression_vs_nb_bits.png}
-	\caption{Taux de compression de lena.bmp en fonction du nombre de bits}
+		\includegraphics[width=12cm, height=10cm]{../taux_compression_vs_nb_niveaux.png}
+	\caption{Taux de compression de lena.bmp en fonction du nombre de niveaux de reconstruction}
 	\label{fig:courbe_compression}
 \end{figure}
 
@@ -312,6 +312,7 @@ Ci-dessous, un tableau récapitulatif des différents taux de compression des im
 \section{Conclusion}
 
 Ce TP nous a permis de se rendre compte de ce qu'implique la quantification. En effet, la distorsion du signal peut-être très importante et la qualité du signal est ainsi dégradée sévèrement. Cependant, nous avons vu qu'avec le même nombre de bits par pixel, il est possible de réduire significativement la distorsion, en appliquant une quantification intelligente qui permet de retrouver des niveaux de reconstruction en moyenne plus proches des valeurs réelles.
+De plus, en implémentant l'algorithme de Lloyd-Max, nous avons pu mieux comprendre son fonctionnement.
 
 \clearpage
 \appendix
