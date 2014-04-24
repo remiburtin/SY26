@@ -162,6 +162,57 @@ dist = 331.5913
 
 Les valeurs de reconstruction sont au milieu de chaque intervalle. Ces intervalles sont répartis entre 0 et 255 ce qui implique qu'il est impossible de retrouver les valeurs de reconstruction 0 ou 255. La distorsion est donc dans tous les cas non nulle dans notre cas. \\
 
+\subsection{Tests sur les différentes images}
+
+\begin{table}[H]
+	\centering
+		\begin{tabular}{l|c|c|c|}
+			\cline{2-4}
+			                               & 4 niveaux & 8 niveaux & 64 niveaux \\
+			\hline
+			\multicolumn{1}{|l|}{Lena}     & 331.59    &  83.38    & 1.28       \\
+			\hline
+			\multicolumn{1}{|l|}{Peppers}  & 309.10    &  86.97    & 1.29       \\
+			\hline
+			\multicolumn{1}{|l|}{Harbour}  & 282.88    &  113.16   & 1.21       \\
+			\hline
+			\multicolumn{1}{|l|}{Bridge}   & 331.21    &  84.13    & 0.87       \\
+			\hline
+			\multicolumn{1}{|l|}{Boats}    & 226.24    &  92.48    & 1.28       \\
+			\hline
+			\multicolumn{1}{|l|}{Airfield} & 405.28    &  92.13    & 1.37       \\
+			\hline
+		\end{tabular}
+	\caption{Comparaison des distorsions}
+	\label{tab:TableComparaisonDistoUniforme}
+\end{table}
+
+\subsection{Huffman - Taux de compression des images quantifiées}
+
+
+\begin{table}[H]
+	\centering
+		\begin{tabular}{l|c|c|c|}
+			\cline{2-4}
+			                               & Uniforme 4 niveaux & Uniforme 16 niveaux       & Sans      \\
+			\hline
+			\multicolumn{1}{|l|}{Lena}     & 77.08 \%           & 55.66 \%                  & 6.66 \%   \\
+			\hline
+			\multicolumn{1}{|l|}{Peppers}  & 77.05 \%           & 53.82 \%                  & 4.77 \%   \\
+			\hline
+			\multicolumn{1}{|l|}{Harbour}  & 79.56 \%           & 59.86 \%                  & 15.21 \%  \\
+			\hline
+			\multicolumn{1}{|l|}{Bridge}   & 77.27 \%           & 53.14 \%                  & 28.35 \%  \\
+			\hline
+			\multicolumn{1}{|l|}{Boats}    & 80.6 \%            & 60.80 \%                  & 11.74 \%  \\
+			\hline
+			\multicolumn{1}{|l|}{Airfield} & 75.31 \%           & 52.46 \%                  & 10.70 \%  \\
+			\hline
+		\end{tabular}
+	\caption{Taux de compression avec Huffman}
+	\label{tab:TableComparaisonTauxCompressionUniforme}
+\end{table}
+
 \section{Quantification scalaire optimale de Lloyd-Max}
 
 \subsection{Mise en oeuvre}
