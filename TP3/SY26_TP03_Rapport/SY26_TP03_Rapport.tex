@@ -187,8 +187,8 @@ Contrairement à la quantification uniforme, il est possible via cet algorithme 
 		\includegraphics[width=4.5cm, height=4.5cm]{../lena_grey.jpg}
 		\includegraphics[width=4.5cm, height=4.5cm]{../lena_quant_4_niveaux.jpg}
 		\includegraphics[width=4.5cm, height=4.5cm]{../lena_quantlloyd_4_niveaux.jpg}
-	\caption{Comparaison visuelle : (de gauche à droite) image originale en niveaux de gris, image quantifiée uniformément, image quantifiée optimisée selon Lloyd-Max}
-	\label{fig:lena_quant_4_niveaux}
+	\caption{Comparaison visuelle : (de gauche à droite) image originale en niveaux de gris, image quantifiée uniformément, image quantifiée optimisée selon Lloyd-Max (débit = 4)}
+	\label{fig:comparaison_img_quant}
 \end{figure}
 
 Nous observons visuellement les différences de qualité entre les deux quantifications mises en oeuvre dans ce TP. La quantification uniforme apporte un contraste plus important qui vient biaiser les couleurs originales. La quantification scalaire optimale permet de retrouver des couleurs plus fidèles à l'image originale, avec des niveaux de gris moins saillants. En effet, les couleurs retrouvent plus facilement leur appartenance dans les classes qui ont été optimisées selon la densité, ce qui permet de retrouver des couleurs plus fidèles. Mathématiquement, cette qualité est démontrée par la minimisation de l'erreur quadratique que permet l'algorithme de Lloyd-Max :
@@ -217,6 +217,9 @@ Nous observons visuellement les différences de qualité entre les deux quantifi
 \end{table}
 
 Des écarts importants sont observés entre les distorsions des deux algorithmes mis en œuvre, pouvant aller du simple au double lorsque les niveaux de reconstruction de la quantification uniforme sont très mal choisis.
+
+
+\subsection{Huffman - Taux de compression des images quantifiées}
 
 \begin{table}[!h]
 	\centering
