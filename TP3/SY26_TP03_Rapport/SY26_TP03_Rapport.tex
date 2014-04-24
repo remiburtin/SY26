@@ -155,24 +155,47 @@ dist = 331.5913
 
 \begin{figure}[H]
 	\centering
-		\includegraphics[scale=0.7]{../lena_quant_4_niveaux.jpg}
+		\includegraphics[width=6cm, height=6cm]{../lena_quant_4_niveaux.jpg}
 	\caption{Quantification uniforme, lena.bmp, débit = 2}
 	\label{fig:lena_quant_4_niveaux}
 \end{figure}
 
-Les valeurs de reconstruction sont au milieu de chaque intervalle. Ces intervalles sont répartis entre 0 et 255 ce qui implique qu'il est impossible de retrouver les valeurs de reconstruction 0 ou 255. La distorsion est donc dans tous les cas non nulle. \\
+Les valeurs de reconstruction sont au milieu de chaque intervalle. Ces intervalles sont répartis entre 0 et 255 ce qui implique qu'il est impossible de retrouver les valeurs de reconstruction 0 ou 255. La distorsion est donc dans tous les cas non nulle dans notre cas. \\
 
 \section{Quantification scalaire optimale de Lloyd-Max}
 
 \subsection{Mise en oeuvre}
 
+La programmation de la fonction de quantification scalaire optimale de Lloyd-Max se fait à l'aide de deux paramètres : le signal (dans notre cas une image), et le débit disponible (bits/pixel). Cette fonction renvoie l'image quantifiée. \\
 
+Pour initialiser l'algorithme, nous utilisons une simple quantification uniforme. Ensuite, nous allons chercher à minimiser l'erreur quadratique à l'aide d'une boucle itérative. A chaque itération, il faut que la valeur de reconstruction se rapproche de la moyenne des échantillons dans un intervalle donné : application de la condition du centroïde. A noter que, comme indiqué dans l'énoncé, lorsque l'intervalle est vide, la valeur de reconstruction devient le centre de l'intervalle. Ensuite, nous modifions l'intervalle (valeurs de décision) en appliquant la règle du plus proche voisin. L'image est quantifiée à l'aide des valeurs de reconstruction et des seuils de décisions via la fonction \textit{quantiz} (vue dans la partie précédente). Sa distorsion est recalculée et comparer à la précédente à chaque itération ce qui permet de sortir de la boucle lorsque cette distorsion ne fluctue plus beaucoup. La condition d'arrêt que nous avons fixé est une différence de distorsion inférieur à $0.1$. Lorsque la distorsion se stabilise, nous reconstruisons l'image afin de pouvoir l'afficher ensuite. L'ensemble de l'algorithme est disponible en annexe \ref{quant_lloyd}\\
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[width=6cm, height=6cm]{../lena_quantlloyd_4_niveaux.jpg}
+	\caption{Quantification scalaire optimale de Lloyd-Max, lena.bmp, débit = 2}
+	\label{fig:lena_quant_4_niveaux}
+\end{figure}
+
+Contrairement à la quantification uniforme, il est possible via cet algorithme de retrouver une distorsion nulle. En effet, les valeurs de reconstruction (niveaux de gris) retrouvées pour un débit égal à 8 sont exactement les mêmes valeurs que pour l'image originale.
 
 \subsection{Tests sur les différentes images}
 
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[width=4.5cm, height=4.5cm]{../lena_grey.jpg}
+		\includegraphics[width=4.5cm, height=4.5cm]{../lena_quant_4_niveaux.jpg}
+		\includegraphics[width=4.5cm, height=4.5cm]{../lena_quantlloyd_4_niveaux.jpg}
+	\caption{Comparaison visuelle : (de gauche à droite) image originale en niveaux de gris, image quantifiée uniformément, image quantifiée optimisée selon Lloyd-Max}
+	\label{fig:lena_quant_4_niveaux}
+\end{figure}
+
+Nous observons visuellement les différences de qualité entre les deux quantifications mises en oeuvre dans ce TP. La quantification uniforme apporte un contraste plus important qui vient biaiser les couleurs originales. La quantification scalaire optimale permet de retrouver des couleurs plus fidèles à l'image originale, avec des niveaux de gris moins saillants. En effet, les couleurs retrouvent plus facilement leur appartenance dans les classes qui ont été optimisées selon la densité, ce qui permet de retrouver des couleurs plus fidèles. Mathématiquement, cette qualité est démontrée par la minimisation de l'erreur quadratique que permet l'algorithme de Lloyd-Max :
+
 \begin{table}[!h]
 	\centering
-		\begin{tabular}{l|c | c|}
+		\begin{tabular}{l|c|c|}
 			\cline{2-3}
 			                               & Lloyd-Max & Uniforme \\
 			\hline
@@ -189,9 +212,11 @@ Les valeurs de reconstruction sont au milieu de chaque intervalle. Ces intervall
 			\multicolumn{1}{|l|}{Airfield} & 285.65    &  405.28  \\
 			\hline
 		\end{tabular}
-	\caption{Comparaison des distortions - 4 niveaux}
+	\caption{Comparaison des distorsions - 4 niveaux}
 	\label{tab:TableComparaisonDisto}
 \end{table}
+
+Des écarts importants sont observés entre les distorsions des deux algorithmes mis en œuvre, pouvant aller du simple au double lorsque les niveaux de reconstruction de la quantification uniforme sont très mal choisis.
 
 \begin{table}[!h]
 	\centering
@@ -216,9 +241,6 @@ Les valeurs de reconstruction sont au milieu de chaque intervalle. Ces intervall
 	\label{tab:TableComparaisonTauxCompression}
 \end{table}
 
-\begin{verbatim}
->> LOG
-\end{verbatim} 
 
 \newpage
 
@@ -239,5 +261,10 @@ Les valeurs de reconstruction sont au milieu de chaque intervalle. Ces intervall
 
 \FSource{../quant_uni_1_2.m}
 
+\newpage
+
+\subsection{Quantification scalaire optimale de Lloyd-Max}\label{quant_lloyd}
+
+\FSource{../lloyd_max_2_1.m}
 
 \end{document}
