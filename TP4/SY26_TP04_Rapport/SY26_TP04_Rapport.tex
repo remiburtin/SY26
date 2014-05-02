@@ -95,10 +95,58 @@ Le but de ce TP est de mettre en œuvre certaines étapes de l’algorithme de c
 
 Cette première fonction nous permet de calculer la transformée en cosinus discrète d'un bloc de taille 8x8.
 
-Pour cela, nous utilisons les formules suivantes :
+Pour cela, nous utilisons les formules suivantes :\\
+
+$D = X_mBY_m^T$ \\ 
+
+avec $X_m(u,x) = \frac{1}{2}C(u) cos(\frac{(2x + 1)\pi u }{16})$ et $Y_m(v,y) = \frac{1}{2}C(v) cos(\frac{(2x + 1)\pi v }{16})$ \\
+
+en prenant $C(0) = \frac{1}{\sqrt{2}}$ et $C(k)=1$ pour $k \in [1..7]$. \\
+
+Les coefficient $u$ et $v$ varie de 0 à 7, donc les matrices $X_m$ et $Y_m$ ont 8 lignes. Par ailleurs, la matrice $B$ avec laquelle nous travaillons est une matrice 8x8. Ainsi, les coefficients $x$ et $y$ sont pris entre 1 et 8. On obtient donc $X_m = Y_m$. \\
+
+Nous calculons les matrices $X_m$ et $Y_m$ en remplaçant les 4 variables $(u, v, x, y)$ dans les formules, nous multiplions les matrices $X_m$, $B$ et $Y_m$ et obtenons ainsi la matrice $D$, la transformée en cosinus discrète de $B$.\\
+
+Le code de la fonction est en annexe \ref{dct_code}.
+
+\subsubsection{R\'esultats}
+\label{sec:Resultats}
+
+Après avoir exécuté la fonction, nous nous rendons compte du résultats : 
+
+\begin{alltt}
+>> Bref=[	139 144 149 153 155 155 155 155;
+					144 151 153 156 159 156 156 156;
+					150 155 160 163 158 156 156 156;
+					159 161 162 160 160 159 159 159;
+					159 160 161 162 162 155 155 155;
+					161 161 161 161 160 157 157 157;
+					162 162 161 163 162 157 157 157;
+					162 162 161 161 163 158 158 158];
+
+>> BrefDCT = MyDCT(Bref)
+
+BrefDCT =
+
+   1.0e+03 *
+
+ 1.2596   -0.0010   -0.0121   -0.0052    0.0021   -0.0017   -0.0027    0.0013
+-0.0226   -0.0175   -0.0062   -0.0032   -0.0029   -0.0001    0.0004   -0.0012
+-0.0109   -0.0093   -0.0016    0.0015    0.0002   -0.0009   -0.0006   -0.0001
+-0.0071   -0.0019    0.0002    0.0015    0.0009   -0.0001   -0.0000    0.0003
+-0.0006   -0.0008    0.0015    0.0016   -0.0001   -0.0007    0.0006    0.0013
+ 0.0018   -0.0002    0.0016   -0.0003   -0.0008    0.0015    0.0010   -0.0010
+-0.0013   -0.0004   -0.0003   -0.0015   -0.0005    0.0017    0.0011   -0.0008
+-0.0026    0.0016   -0.0038   -0.0018    0.0019    0.0012   -0.0006   -0.0004
+\end{alltt}
+
+La matrice $BrefDCT$ correspond au résultat souhaité. \\
+
 
 
 \section{Quantification}
+
+
 
 \section{Parcours en zigzag}
 
