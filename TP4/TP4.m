@@ -98,7 +98,7 @@ Vzig=Dq(zig)
 
 % Ecrire ici la fonction
 
-A= code(Vzig,diff,8)
+A= code(Vzig,Vzig(1)-0,8);
 
 
 

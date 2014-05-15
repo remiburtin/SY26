@@ -1,5 +1,4 @@
 function D = MyDCT(B)
-
 X = zeros(8,8);
 Y = zeros(8,8);
 C = [1/sqrt(2) 1 1 1 1 1 1 1];
@@ -12,5 +11,9 @@ end;
 
 Y = X;
 D = X * B * Y';
+
+%%%%%% DCT INVERSE %%%%%%
+D2 = D * Y;
+D3 = Y'*D2;
 
 end
