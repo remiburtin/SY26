@@ -1,6 +1,5 @@
-function D = MyDCT(B)
+function B = MyIDCT(D)
 X = zeros(8,8);
-Y = zeros(8,8);
 C = [1/sqrt(2) 1 1 1 1 1 1 1];
 
 for i=0:7,
@@ -9,7 +8,6 @@ for i=0:7,
     end;
 end;
 
-Y = X;
-D = X * B * Y';
+B = single(X' * (D * X));
 
 end
