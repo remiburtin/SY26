@@ -1,4 +1,4 @@
-function imgDeco= decJPG(code)
+function imgDeco= decJPG(code, quality)
 
 parcoursZig=[1 9 2 3 10 17 25 18 ...
              11 4 5 12 19 26 33 41 ...
@@ -23,6 +23,7 @@ iZig = 1;
 oldFirst = 0;
 
 zig = zeros(1,64);
+vBlock = [];
 
 while iCode ~= length(code) + 1,
 
@@ -54,19 +55,21 @@ while iCode ~= length(code) + 1,
     block(parcoursZig) = zig;
     
     %quantification inverse
-    block = block.*matQuant;
+    block = block.*QuantM(quality);
     
     %calcul DCT inverse
-    block = round(MyIDCT(block))
+    block = round(MyIDCT(block));
     
-    %Remettre le bloc dans une matrice
-    %%%
-    %%%
+    %transformation du bloc en cell
+    block = mat2cell(block, 8,8);
     
+    %on met les blocs dans un vecteur
+    vBlock = [vBlock block];  
     
     zig = zeros(1,64);
 end;
 
-
+%on remets les blocs sous la forme d'une matrice
+imgDeco = cell2mat(reshape(vBlock, sqrt(length(vBlock)), sqrt(length(vBlock))));
 
 end
