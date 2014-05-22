@@ -1,5 +1,5 @@
 function QM = QuantM(Quality)
-    %Cf standard JPEG
+    %Cf standards JPEG
     if Quality >= 50
         Fq = (100 - Quality)/50;
     else
@@ -18,4 +18,7 @@ function QM = QuantM(Quality)
       %On borne les valeurs a 255
       index = find(QM > 255);
       QM(index) = 255;
+      
+      index = find(QM == 0);
+      QM(index) = 1;
 end

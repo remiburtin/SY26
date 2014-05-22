@@ -31,7 +31,7 @@ BrefDCT = MyDCT(Bref)
 
 %% Table de quantifiquation QM
 
-Quality=20;
+Quality=100;
 QM=QuantM(Quality);  % fonction à compléter
 
 % Resultats
@@ -49,7 +49,7 @@ QM=QuantM(Quality);  % fonction à compléter
 
 %% Quantification 
      
-Dq= round(BrefDCT./QM)
+Dq = round(BrefDCT./QM)
 
 %% Le parcours en ZigZag
 zig=[1 9 2 3 10 17 25 18 ...
@@ -61,7 +61,7 @@ zig=[1 9 2 3 10 17 25 18 ...
      24 32 38 46 53 60 61 54 ...
      47 40 48 55 62 63 56 64];
  
-Vzig=Dq(zig)
+Vzig=Dq(zig);
 
 %% Le Codage
 % Exemple

@@ -26,6 +26,7 @@
 \usepackage{float}
 \usepackage{listings}
 \usepackage{alltt}
+\usepackage{amsmath}
 \renewcommand{\ttdefault}{txtt}
 
 \lstset{basicstyle=\ttfamily,
@@ -112,7 +113,7 @@ Le code de la fonction est en annexe \ref{dct_code}.
 \subsubsection{R\'esultats}
 \label{sec:Resultats}
 
-Après avoir exécuté la fonction, nous nous rendons compte du résultats : 
+Après avoir exécuté la fonction, nous nous rendons compte du résultat : 
 
 \begin{alltt}
 >> Bref=[	139 144 149 153 155 155 155 155;
@@ -146,6 +147,41 @@ La matrice $BrefDCT$ correspond au résultat souhaité. \\
 
 \section{Quantification}
 
+Cette partie nous permet de calculer une matrice de quantification, qui nous permettra ensuite de quantifier le bloc après la DCT. Le bloc quantifié s'obtient en divisant chacun des coefficients après la transformée en cosinus discrète par le facteur de quantification situé à la même position dans la matrice de quantification $QM$ :
+	\[ Dq(i,j) = \left\lfloor \frac{D(i,j)}{QM(i,j)} + 0.5 \right\rfloor
+	\]
+	
+
+L'oeil humain étant sensible aux fréquences basses (situées dans le coin supérieur gauche de la matrice après DCT), nous devons diviser ces coefficients par un facteur faible. Voici la matrice utilisée pour un facteur $\textit{Quality} = 50$ :  \\
+
+QM = \begin{bmatrix}
+	16 & 11 & 10 & 16 & 24  & 40  & 51  & 61  \\
+	12 & 12 & 14 & 19 & 26  & 58  & 60  & 55  \\
+	14 & 13 & 16 & 24 & 40  & 57  & 69  & 56  \\
+	14 & 17 & 22 & 29 & 51  & 87  & 80  & 62  \\
+	18 & 22 & 37 & 56 & 68  & 109 & 103 & 77  \\
+	24 & 35 & 55 & 64 & 81  & 104 & 113 & 92  \\
+	49 & 64 & 78 & 87 & 103 & 121 & 120 & 101 \\
+	72 & 92 & 95 & 98 & 112 & 100 & 103 & 99
+\end{bmatrix} * Fq
+
+
+Le facteur \textit{Quality} fourni à la fonction en paramètre d’entrée est compris entre 1 (très mauvais) et 100
+(très bien). Si $Quality = 50$ alors $Fq = 1$. Afin de trouver la fonction $f()$ prenant comme paramètre \textit{Quality}, nous avons recherché du côté des standards JPEG qui nous dit :
+
+
+\[ Fq(Quality) = \left\{ 
+  \begin{array}{l l}
+    (100 - Quality)/50 & \quad \text{$Quality \geq 50$}\\
+    50/Quality & \quad \text{sinon}
+  \end{array} \right.\]
+
+Nous obtenons ainsi $Fq$. La matrice de quantification est alors modifiée en conséquence. Il faut faire attention à ce que les valeurs de la matrice soit compris entre 1 et 255. Si certaines valeurs sont plus petites (\textit{resp.} plus grandes) nous les fixons à 1 (\textit{resp.} à 255). Pour cela, nous utilisons la fonction \textit{find}, cf Annexe \ref{quant_code}.\\
+
+Nous avons maintenant la matrice de quantification, nous pouvons alors calculer $Dq$, le bloc quantifié après la DCT : 
+\begin{alltt}
+Dq = round(BrefDCT./QM)
+\end{alltt}
 
 
 \section{Parcours en zigzag}
@@ -171,6 +207,12 @@ La matrice $BrefDCT$ correspond au résultat souhaité. \\
 \subsection{Transformée en cosinus discrète d'un bloc 8x8}\label{dct_code}
 
 \FSource{../MyDCT.m}
+
+\newpage
+
+\subsection{Quantification}\label{quant_code}
+
+\FSource{../QuantM.m}
 
 \newpage
 
