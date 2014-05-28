@@ -11,7 +11,7 @@ Bref=[139 144 149 153 155 155 155 155;
 
 %% DCT2
 
-BrefDCT = MyDCT(Bref)
+BrefDCT = MyDCT(Bref);
 
 % Resultats 
 % BrefDCT =
@@ -61,7 +61,7 @@ zig=[1 9 2 3 10 17 25 18 ...
      24 32 38 46 53 60 61 54 ...
      47 40 48 55 62 63 56 64];
  
-Vzig=Dq(zig);
+Vzig=Dq(zig)
 
 %% Le Codage
 % Exemple

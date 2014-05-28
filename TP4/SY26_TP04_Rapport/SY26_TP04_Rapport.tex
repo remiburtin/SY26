@@ -186,9 +186,52 @@ Dq = round(BrefDCT./QM)
 
 \section{Parcours en zigzag}
 
+Afin de pouvoir compresser efficacement l’information du bloc \textit{Dq} on se propose de transformer la matrice 8×8 en un vecteur de longueur 64 en parcourant le bloc dans un ordre qui favorise la concentration des coefficients nuls à la fin du vecteur.\\
+
+\begin{figure}[h]
+	\centering
+		\includegraphics[scale=0.5]{zigzag.jpg}
+	\label{fig:zigzag}
+\end{figure}
+
+
+Pour cela, nous avons à disposition un vecteur contenant les indexes des positions successives du parcours en zigzag dans le bloc 8x8. Matlab nous permet facilement de récupérer le vecteur à partir ce des indexes. En effet, prenons cet exemple simple : 
+
+\begin{alltt}
+>> a = [5 4 3 2 1]
+a =
+     5     4     3     2     1
+
+>> a([1 3 5])
+ans =
+     5     3     1
+\end{alltt}
+
+Nous voyons que pour récupérer les valeurs d'un vecteur à des indexes précis, nous pouvons passer en paramètre du vecteur un vecteur d'indexes. Nous faisons de même pour le parcours en zigzag dans un bloc 8x8 :
+
+\begin{alltt}
+%% Le parcours en ZigZag (Indexes)
+zig=[1 9 2 3 10 17 25 18 ...
+     11 4 5 12 19 26 33 41 ...
+     34 27 20 13 6 7 14 21 ...
+     28 35 42 49 57 50 43 36 ...
+     29 22 15 8 16 23 40 37 ...
+     44 51 58 59 52 45 38 41 ...
+     24 32 38 46 53 60 61 54 ...
+     47 40 48 55 62 63 56 64];
+
+Vzig=Dq(zig);
+\end{alltt}
+
+
 \section{Codage}
 
+Pour le codage d'une image entière, nous devons appliquer l'ensemble des algorithmes effectués jusqu'à présent pour des blocs de taille 8x8 sur toute une image. Nous faisons l'hypothèse que cette image à une taille multiple de 8, tant en longueur qu'en largeur, ce qui permet de faire ressortir un nombre entier de blocs 8x8. Si ça n'avait pas été le cas, nous aurions dû augmenter la taille de l'image pour qu'elle atteigne un multiple de 8 en y ajoutant des pixels égaux à 0.\\
+
+
 \section{Codage/décodage d'une image}
+
+
 
 \newpage
 
@@ -213,6 +256,10 @@ Dq = round(BrefDCT./QM)
 \subsection{Quantification}\label{quant_code}
 
 \FSource{../QuantM.m}
+
+\subsection{Codage d'une image}\label{codage_code}
+
+\FSource{../codJPG.m}
 
 \newpage
 
