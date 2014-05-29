@@ -257,27 +257,50 @@ L'algorithme entier est en Annexe \ref{codage_code}.
 
 \section{Codage/décodage d'une image}
 Pour le codage d'une image entière, nous devons appliquer l'ensemble des algorithmes effectués jusqu'à présent pour des blocs de taille 8x8 sur toute une image. Nous faisons l'hypothèse que cette image à une taille multiple de 8, tant en longueur qu'en largeur, ce qui permet de faire ressortir un nombre entier de blocs 8x8. Si ça n'avait pas été le cas, nous aurions dû augmenter la taille de l'image pour qu'elle atteigne un multiple de 8 en y ajoutant des pixels égaux à 0 (padding).\\
+Pour effectuer la division de l'image en bloc de 8x8, nous utilisons la fonction mat2cell : 
+\begin{alltt}
+blocks = mat2cell(img,8*ones(1,size(img,1)/8),8*ones(1,size(img,2)/8));
+\end{alltt}
 
+Cette fonction prend en paramètres l'image à découper ainsi que deux vecteurs. Ces vecteurs décrivent le découpage de la matrice. \\
+Par exemple si on a une matrice 32x32 et qu'on veut la découper en 16 blocs de 8x8, on passera en paramètre à la fonction mat2cell les deux vecteurs suivants : \\
+$\begin{bmatrix}
+   8 & 8 & 8 & 8
+\end{bmatrix}$
+$\begin{bmatrix}
+   8 & 8 & 8 & 8
+\end{bmatrix}$ \\
+Pour une matrice 32x32 qu'on veut découper en 4 blocs 16x16 :
+$\begin{bmatrix}
+   16 & 16
+\end{bmatrix}$
+$\begin{bmatrix}
+   16 & 16
+\end{bmatrix}$ \\
+Une fois la matrice découpée, on parcourt l'ensemble des blocs et on leur applique l'ensemble des algorithmes que nous avons codés : DCT, Quantification, Zig-Zag et RLE.\\
+Nous concatenons l'ensemble des résulats dans un vecteur. Ce qui nous donne notre image encodée.
 
-\begin{tabular}{|l|c|c|c|c||c|c|c|c|}
-	\hline
-	& \multicolumn{4}{c||}{\bf SNR} & \multicolumn{4}{c|}{\bf Compression} \\
-	\hline
-	\bf Image \textbackslash Facteur de qualité & \bf 1 & \bf 20 & \bf 50 & \bf 100 & \bf 1 & \bf 20 & \bf 50 & \bf 100 \\
-	\hline
-	Lena                                        &     0 &      0 &      0 &       0 &     0 &      0 &      0 &       0 \\
-	\hline
-	Peppers                                     &     0 &      0 &      0 &       0 &     0 &      0 &      0 &       0 \\
-	\hline
-	Harbour                                     &     0 &      0 &      0 &       0 &     0 &      0 &      0 &       0 \\
-	\hline
-	Bridge                                      &     0 &      0 &      0 &       0 &     0 &      0 &      0 &       0 \\
-	\hline
-	Boats                                       &     0 &      0 &      0 &       0 &     0 &      0 &      0 &       0 \\
-	\hline
-	Airfield                                    &     0 &      0 &      0 &       0 &     0 &      0 &      0 &       0 \\
-	\hline
-\end{tabular}
+\begin{center}
+	\begin{tabular}{|l|c|c|c|c||c|c|c|c|}
+		\hline
+		& \multicolumn{4}{c||}{\bf SNR} & \multicolumn{4}{c|}{\bf Compression} \\
+		\hline
+		\bf Image \textbackslash Facteur de qualité & \bf 1 & \bf 20 & \bf 50 & \bf 100 & \bf 1 & \bf 20 & \bf 50 & \bf 100 \\
+		\hline
+		Lena                                        &     0 &      0 &      0 &       0 &     91.85\% &      73.09\% &      54.60\% &       -149.42\% \\
+		\hline
+		Peppers                                     &     0 &      0 &      0 &       0 &     92.50\% &      80.26\% &      65.14\% &       -171.95\% \\
+		\hline
+		Harbour                                     &     0 &      0 &      0 &       0 &     92.21\% &      71.09\% &      47.26\% &       -154.32\% \\
+		\hline
+		Bridge                                      &     0 &      0 &      0 &       0 &     92.17\% &      59.36\% &      27.17\% &       -184.53\% \\
+		\hline
+		Boats                                       &     0 &      0 &      0 &       0 &     92.57\% &      77.41\% &      61.45\% &       -153.06\% \\
+		\hline
+		Airfield                                    &     0 &      0 &      0 &       0 &      91.1\% &      63.34\% &      33.15\% &       -187.75\% \\
+		\hline
+	\end{tabular}
+\end{center}
 
 \newpage
 
