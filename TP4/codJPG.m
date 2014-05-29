@@ -35,4 +35,23 @@ for i=1:size(blocks,1)*size(blocks,2),
     imgEnco = [imgEnco A];
 end;
 
+%Calcul du taux de compression
+size_img = size(img,1)*size(img,2)*8;
+size_enco = length(imgEnco)*8;
+compression = (1 - (size_enco / size_img))*100
+
+%Decodage de l'image pour pouvoir calculer le SNR
+imgDeco = decJPG(imgEnco, quality);
+
+%Mise de l'image originale et quantifie sous forme de liste
+list=reshape(double(img), 1, size_img/8);
+list_quant=reshape(double(imgDeco), 1, size_img/8);
+
+%Calcul distortion
+distortion = mean((list-list_quant).^2)
+%Calcul NMSE
+nmse = distortion/var(list)
+%Calcul du rapport signal sur bruit
+snr = -10*log10(nmse)
+
 end

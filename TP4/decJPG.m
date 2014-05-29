@@ -21,7 +21,6 @@ matQuant = [16 11 10 16 24  40  51  61;
 iCode = 1;
 iZig = 1;
 oldFirst = 0;
-
 zig = zeros(1,64);
 vBlock = [];
 
@@ -34,15 +33,13 @@ while iCode ~= length(code) + 1,
     iZig = iZig + 1;
     iCode = iCode + 2;
     while true
-        if code(iCode) == 0 && code(iCode + 1) == 0 %Si on est à la fin d'un bloc
+        if code(iCode) == 0 && code(iCode + 1) == 0 %Si on est a la fin d'un bloc
             iCode = iCode + 2;
             iZig = 1;
             break;
         else % C'est un triplet normal
-            for i=1:code(iCode), %On met le bon nombre de 0
-                zig(iZig) = 0;
-                iZig = iZig + 1;
-            end
+            iZig = iZig + code(iCode); %On met le bon nombre de 0
+            
             zig(iZig) = code(iCode + 2); %on ajoute le coefficient
             iZig = iZig + 1;
             iCode = iCode + 3; %on passe au triplet suivant
@@ -65,7 +62,6 @@ while iCode ~= length(code) + 1,
     
     %on met les blocs dans un vecteur
     vBlock = [vBlock block];  
-    
     zig = zeros(1,64);
 end;
 

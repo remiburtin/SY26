@@ -232,11 +232,11 @@ Pour le codage du bloc, nous appliquons l'algorithme RLE (Run-Length-Encoding). 
 	\item \textbf{nb} est le nombre de bits nécessaires pour coder ce coefficient (il sera constant et fixé à 8 dans notre cas).
 	\item \textbf{Coef} est la valeur du coefficient.
 \end{itemize}
-Le premier élément du bloc est coder sur un couple (nb, diff). En effet, le coefficient DCT(0,0) est proportionnel à la moyenne des coefficients de tout le bloc B donc le coder en tant que tel demande un nombre de bits important. Mais, si on suppose que deux blocs voisins ont des moyennes proches, la différence entre les moyennes des blocs est faible et donc moins coûteuse en terme de codage. Ainsi, pour le premier élément du bloc, il sera encodé la différence du coefficient avec le coefficient du premier élément du bloc voisin. La partie restante du vecteur où il n’y a que des zéros sera codée par un double zéro. Ainsi, la longueur du vecteur contenant le bloc encodé est égale au nombre de coefficients non nuls multiplié par trois, moins un (le premier coefficient n'utilise qu'un couple de valeurs, et non un triplet), plus deux (deux zéros sont ajoutés à la fin) \textit{[1]}.\\
+Le premier élément du bloc est coder sur un couple (nb, diff). En effet, le coefficient DCT(0,0) est proportionnel à la moyenne des coefficients de tout le bloc B donc le coder en tant que tel demande un nombre de bits important. Mais, si on suppose que deux blocs voisins ont des moyennes proches, la différence entre les moyennes des blocs est faible et donc moins coûteuse en terme de codage. Ainsi, pour le premier élément du bloc, il sera encodé la différence du coefficient avec le coefficient du premier élément du bloc voisin. La partie restante du vecteur où il n’y a que des zéros sera codée par un double zéro. \\
 
 Nous encodons chaque bloc via l'implémentation d'une fonction \textbf{code(Vzig, diff, nb)}, prenant en entrée le vecteur \textbf{Vzig} ainsi que la différence \textbf{diff} avec le premier élément du bloc précédent et le nombre de bits \textbf{nb} pour coder chaque coefficient.\\
 
-Dans un premier temps, nous cherchons les coefficients non nuls dans le bloc via la fonction \textit{find}. Celui-ci retourne les indexes de ces coefficients dans le bloc. Sa longueur nous donne le nombre de coefficient non nuls. Nous pouvons donc initialiser le vecteur contenant le bloc encodé \textbf{A} via la fonction \textit{zeros}. Sa longueur est donné via la formule ci-dessus \textit{[1]}.
+Dans un premier temps, nous cherchons les coefficients non nuls dans le bloc via la fonction \textit{find}. Celui-ci retourne les indexes de ces coefficients dans le bloc. Sa longueur nous donne le nombre de coefficient non nuls.
 
 Nous pouvons dès à présent initialiser les deux premières valeurs de ce vecteur. En effet, la première valeur prend le nombre de bits pour encoder la seconde, donné ici via le paramètre \textbf{nb}. La seconde prend le paramètre \textbf{diff}. \\
 
@@ -256,6 +256,7 @@ Les deux dernières valeurs étant déjà à zéro, puisque le vecteur a été i
 L'algorithme entier est en Annexe \ref{codage_code}.
 
 \section{Codage/décodage d'une image}
+\subsection{Codage}
 Pour le codage d'une image entière, nous devons appliquer l'ensemble des algorithmes effectués jusqu'à présent pour des blocs de taille 8x8 sur toute une image. Nous faisons l'hypothèse que cette image à une taille multiple de 8, tant en longueur qu'en largeur, ce qui permet de faire ressortir un nombre entier de blocs 8x8. Si ça n'avait pas été le cas, nous aurions dû augmenter la taille de l'image pour qu'elle atteigne un multiple de 8 en y ajoutant des pixels égaux à 0 (padding).\\
 Pour effectuer la division de l'image en bloc de 8x8, nous utilisons la fonction mat2cell : 
 \begin{alltt}
@@ -280,7 +281,7 @@ $\begin{bmatrix}
 Une fois la matrice découpée, on parcourt l'ensemble des blocs et on leur applique l'ensemble des algorithmes que nous avons codés : DCT, Quantification, Zig-Zag et RLE.\\
 Nous concatenons l'ensemble des résulats dans un vecteur. Ce qui nous donne notre image encodée.
 
-\begin{center}
+\begin{table}[!h]
 	\footnotesize
 	\begin{tabular}{|l|c|c|c|c||c|c|c|c|}
 		\hline
@@ -301,7 +302,37 @@ Nous concatenons l'ensemble des résulats dans un vecteur. Ce qui nous donne not
 		Airfield                                    &      8.55 dB &      14.91 dB &      17.41 dB &       28.46 dB &      91.1\% &      63.34\% &      33.15\% &       -187.75\% \\
 		\hline
 	\end{tabular}
+	\caption{Tableau de comparaison des taux de compression et des SNR en fonction du facteur de qualité utilisé pour le codage}
+\end{table}
+
+On peut observer des taux de compression négatifs pour un facteur de qualité de 100. Cela peut s'expliquer par le manque de coefficients nuls dans la matrice quantifié. Or chaque valeur est ensuite codé par un triplet, ce qui augmente grandement la taille. \\
+Il faudrait faire en sorte que lorsque le taux de compression descend sous la barre de 0, on utilise l'image originale et non celle codée.
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[width=3.5cm, height=3.5cm]{../lena_1.jpg}
+		\includegraphics[width=3.5cm, height=3.5cm]{../lena_20.jpg}
+		\includegraphics[width=3.5cm, height=3.5cm]{../lena_50.jpg}
+		\includegraphics[width=3.5cm, height=3.5cm]{../lena_100.jpg}
+	\caption{Comparaison visuelle : (de gauche à droite) lena.bmp encodée avec les facteurs de qualité 1, 20, 50 et 100}
+	\label{fig:comparaison_img_quant}
+\end{figure}
+
+\subsection{Décodage}
+
+Pour le décodage, il faut effectuer l'exact inverse de ce que l'on a fait pour le codage. \\
+On commence par parcourir le vecteur obtenu par le codage de l'image. On reconstitue chaque blocs grâce aux informations contenues dans les triplets. Nous savons que nous arrivons à la fin d'un bloc lorsque nous rencontrons deux zéros à la place d'un triplet. \\
+
+On a alors un vecteur que l'on remet sous forme matricielle à l'aide d'un parcours en zig-zag inverse. On multiplie ensuite la matrice obtenue par la matrice de quantification (multiplication membre à membre). On peut enfin obtenir le bloc décodé en appliquant une DCT inverse, qui est définie comme telle :\\
+
+Pour un bloc D de taille 8 x 8, la DCT inverse est donnée par
+
+\begin{center}
+$B = X^TDX$\\
+avec $X(i,j)=\frac{1}{2}C(i)cos(\frac{(2j+1)\pi i}{16})$ et $C(0) = \frac{1}{\sqrt{2}}, C(k) = 1$ pour $k = 1 ... 7$
 \end{center}
+
+On met alors tous les blocs ainsi décodés dans un vecteur que nous remettons sous forme de matrice (une fois que tous les blocs ont été décodés) grâce à la fonction \textbf{reshape}.
 
 \newpage
 
@@ -323,6 +354,12 @@ Nous concatenons l'ensemble des résulats dans un vecteur. Ce qui nous donne not
 
 \newpage
 
+\subsection{Transformée en cosinus discrète inverse d'un bloc 8x8}\label{idct_code}
+
+\FSource{../MyIDCT.m}
+
+\newpage
+
 \subsection{Quantification}\label{quant_code}
 
 \FSource{../QuantM.m}
@@ -338,6 +375,12 @@ Nous concatenons l'ensemble des résulats dans un vecteur. Ce qui nous donne not
 \subsection{Codage d'une image}\label{codage_image_code}
 
 \FSource{../codJPG.m}
+
+\newpage
+
+\subsection{Décodage d'une image}\label{decodage_image_code}
+
+\FSource{../decJPG.m}
 
 \newpage
 
