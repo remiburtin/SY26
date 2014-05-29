@@ -188,11 +188,11 @@ Dq = round(BrefDCT./QM)
 
 Afin de pouvoir compresser efficacement l’information du bloc \textit{Dq}, on se propose de transformer la matrice 8x8 en un vecteur de longueur 64 en parcourant le bloc dans un ordre qui favorise la concentration des coefficients nuls à la fin du vecteur.\\
 
-\begin{figure}[h]
-	\centering
-		\includegraphics[scale=0.5]{zigzag.jpg}
-	\label{fig:zigzag}
-\end{figure}
+% \begin{figure}[h]
+% 	\centering
+% 		\includegraphics[scale=0.5]{zigzag.jpg}
+% 	\label{fig:zigzag}
+% \end{figure}
 
 
 Pour cela, nous avons à disposition un vecteur contenant les indexes des positions successives du parcours en zigzag dans le bloc 8x8. Matlab nous permet facilement de récupérer le vecteur à partir ce des indexes. En effet, prenons cet exemple simple : 
@@ -281,23 +281,24 @@ Une fois la matrice découpée, on parcourt l'ensemble des blocs et on leur appl
 Nous concatenons l'ensemble des résulats dans un vecteur. Ce qui nous donne notre image encodée.
 
 \begin{center}
+	\footnotesize
 	\begin{tabular}{|l|c|c|c|c||c|c|c|c|}
 		\hline
 		& \multicolumn{4}{c||}{\bf SNR} & \multicolumn{4}{c|}{\bf Compression} \\
 		\hline
-		\bf Image \textbackslash Facteur de qualité & \bf 1 & \bf 20 & \bf 50 & \bf 100 & \bf 1 & \bf 20 & \bf 50 & \bf 100 \\
+		\bf Image \textbackslash Qualité &        \bf 1 &        \bf 20 &        \bf 50 &        \bf 100 &       \bf 1 &       \bf 20 &       \bf 50 &         \bf 100 \\
 		\hline
-		Lena                                        &     0 &      0 &      0 &       0 &     91.85\% &      73.09\% &      54.60\% &       -149.42\% \\
+		Lena                                        &      8.07 dB &      16.10 dB &      19.33 dB &       31.42 dB &     91.85\% &      73.09\% &      54.60\% &       -149.42\% \\
 		\hline
-		Peppers                                     &     0 &      0 &      0 &       0 &     92.50\% &      80.26\% &      65.14\% &       -171.95\% \\
+		Peppers                                     &     10.68 dB &      18.88 dB &      21.21 dB &       33.97 dB &     92.50\% &      80.26\% &      65.14\% &       -171.95\% \\
 		\hline
-		Harbour                                     &     0 &      0 &      0 &       0 &     92.21\% &      71.09\% &      47.26\% &       -154.32\% \\
+		Harbour                                     &      5.74 dB &      11.21 dB &      14.23 dB &       24.17 dB &     92.21\% &      71.09\% &      47.26\% &       -154.32\% \\
 		\hline
-		Bridge                                      &     0 &      0 &      0 &       0 &     92.17\% &      59.36\% &      27.17\% &       -184.53\% \\
+		Bridge                                      &      7.66 dB &      13.63 dB &      16.14 dB &       27.46 dB &     92.17\% &      59.36\% &      27.17\% &       -184.53\% \\
 		\hline
-		Boats                                       &     0 &      0 &      0 &       0 &     92.57\% &      77.41\% &      61.45\% &       -153.06\% \\
+		Boats                                       &      9.69 dB &      17.93 dB &      21.42 dB &       38.84 dB &     92.57\% &      77.41\% &      61.45\% &       -153.06\% \\
 		\hline
-		Airfield                                    &     0 &      0 &      0 &       0 &      91.1\% &      63.34\% &      33.15\% &       -187.75\% \\
+		Airfield                                    &      8.55 dB &      14.91 dB &      17.41 dB &       28.46 dB &      91.1\% &      63.34\% &      33.15\% &       -187.75\% \\
 		\hline
 	\end{tabular}
 \end{center}
