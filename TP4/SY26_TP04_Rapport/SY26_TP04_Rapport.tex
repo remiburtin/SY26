@@ -186,7 +186,7 @@ Dq = round(BrefDCT./QM)
 
 \section{Parcours en zigzag}
 
-Afin de pouvoir compresser efficacement l’information du bloc \textit{Dq}, on se propose de transformer la matrice 8×8 en un vecteur de longueur 64 en parcourant le bloc dans un ordre qui favorise la concentration des coefficients nuls à la fin du vecteur.\\
+Afin de pouvoir compresser efficacement l’information du bloc \textit{Dq}, on se propose de transformer la matrice 8x8 en un vecteur de longueur 64 en parcourant le bloc dans un ordre qui favorise la concentration des coefficients nuls à la fin du vecteur.\\
 
 \begin{figure}[h]
 	\centering
@@ -231,7 +231,7 @@ Pour le codage du bloc, nous appliquons l'algorithme RLE (Run-Length-Encoding). 
 	\item \textbf{nz} est le nombre de zéros précédant la valeur non nulle (le coefficient).
 	\item \textbf{nb} est le nombre de bits nécessaires pour coder ce coefficient (il sera constant et fixé à 8 dans notre cas).
 	\item \textbf{Coef} est la valeur du coefficient.
-\end{itemize}\\
+\end{itemize}
 Le premier élément du bloc est coder sur un couple (nb, diff). En effet, le coefficient DCT(0,0) est proportionnel à la moyenne des coefficients de tout le bloc B donc le coder en tant que tel demande un nombre de bits important. Mais, si on suppose que deux blocs voisins ont des moyennes proches, la différence entre les moyennes des blocs est faible et donc moins coûteuse en terme de codage. Ainsi, pour le premier élément du bloc, il sera encodé la différence du coefficient avec le coefficient du premier élément du bloc voisin. La partie restante du vecteur où il n’y a que des zéros sera codée par un double zéro. Ainsi, la longueur du vecteur contenant le bloc encodé est égale au nombre de coefficients non nuls multiplié par trois, moins un (le premier coefficient n'utilise qu'un couple de valeurs, et non un triplet), plus deux (deux zéros sont ajoutés à la fin) \textit{[1]}.\\
 
 Nous encodons chaque bloc via l'implémentation d'une fonction \textbf{code(Vzig, diff, nb)}, prenant en entrée le vecteur \textbf{Vzig} ainsi que la différence \textbf{diff} avec le premier élément du bloc précédent et le nombre de bits \textbf{nb} pour coder chaque coefficient.\\
@@ -256,9 +256,28 @@ Les deux dernières valeurs étant déjà à zéro, puisque le vecteur a été i
 L'algorithme entier est en Annexe \ref{codage_code}.
 
 \section{Codage/décodage d'une image}
+Pour le codage d'une image entière, nous devons appliquer l'ensemble des algorithmes effectués jusqu'à présent pour des blocs de taille 8x8 sur toute une image. Nous faisons l'hypothèse que cette image à une taille multiple de 8, tant en longueur qu'en largeur, ce qui permet de faire ressortir un nombre entier de blocs 8x8. Si ça n'avait pas été le cas, nous aurions dû augmenter la taille de l'image pour qu'elle atteigne un multiple de 8 en y ajoutant des pixels égaux à 0 (padding).\\
 
-Pour le codage d'une image entière, nous devons appliquer l'ensemble des algorithmes effectués jusqu'à présent pour des blocs de taille 8x8 sur toute une image. Nous faisons l'hypothèse que cette image à une taille multiple de 8, tant en longueur qu'en largeur, ce qui permet de faire ressortir un nombre entier de blocs 8x8. Si ça n'avait pas été le cas, nous aurions dû augmenter la taille de l'image pour qu'elle atteigne un multiple de 8 en y ajoutant des pixels égaux à 0.\\
 
+\begin{tabular}{|l|c|c|c|c||c|c|c|c|}
+	\hline
+	& \multicolumn{4}{c||}{\bf SNR} & \multicolumn{4}{c|}{\bf Compression} \\
+	\hline
+	\bf Image \textbackslash Facteur de qualité & \bf 1 & \bf 20 & \bf 50 & \bf 100 & \bf 1 & \bf 20 & \bf 50 & \bf 100 \\
+	\hline
+	Lena                                        &     0 &      0 &      0 &       0 &     0 &      0 &      0 &       0 \\
+	\hline
+	Peppers                                     &     0 &      0 &      0 &       0 &     0 &      0 &      0 &       0 \\
+	\hline
+	Harbour                                     &     0 &      0 &      0 &       0 &     0 &      0 &      0 &       0 \\
+	\hline
+	Bridge                                      &     0 &      0 &      0 &       0 &     0 &      0 &      0 &       0 \\
+	\hline
+	Boats                                       &     0 &      0 &      0 &       0 &     0 &      0 &      0 &       0 \\
+	\hline
+	Airfield                                    &     0 &      0 &      0 &       0 &     0 &      0 &      0 &       0 \\
+	\hline
+\end{tabular}
 
 \newpage
 
