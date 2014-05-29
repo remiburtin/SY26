@@ -188,11 +188,11 @@ Dq = round(BrefDCT./QM)
 
 Afin de pouvoir compresser efficacement l’information du bloc \textit{Dq}, on se propose de transformer la matrice 8x8 en un vecteur de longueur 64 en parcourant le bloc dans un ordre qui favorise la concentration des coefficients nuls à la fin du vecteur.\\
 
-% \begin{figure}[h]
-% 	\centering
-% 		\includegraphics[scale=0.5]{zigzag.jpg}
-% 	\label{fig:zigzag}
-% \end{figure}
+\begin{figure}[h]
+	\centering
+		\includegraphics[scale=0.5]{zigzag.jpg}
+	\label{fig:zigzag}
+\end{figure}
 
 
 Pour cela, nous avons à disposition un vecteur contenant les indexes des positions successives du parcours en zigzag dans le bloc 8x8. Matlab nous permet facilement de récupérer le vecteur à partir ce des indexes. En effet, prenons cet exemple simple : 
