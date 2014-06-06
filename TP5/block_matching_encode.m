@@ -20,6 +20,7 @@ function [ time, output_image, error ] = block_matching_encode( img_ref, img, M,
     
     %affichage de la difference en tre l'image courante et l'image de
     %reference
+    figure('name','Diff current vs ref');
     imshow(((img-img_ref)+128)/255);
     
     %Initialisation matrice contenant les composantes x et y des vecteurs
@@ -63,18 +64,18 @@ function [ time, output_image, error ] = block_matching_encode( img_ref, img, M,
     
     %calcul et affichage de l'erreur de prediction
     error = (img - output_image)+128;
-    figure;
+    figure('name','Erreur de prediction');
     imshow(error/255);
     
     %champ de vecteur
-    figure;
+    figure('name','Vecteurs de mouvement');
     quiver(matx/M,maty/M);
     %inversion de l'axe des y
     axis ij;
     
     
     %affichage de l'image predite
-    figure;
+    figure('name','Image prédite');
     imshow(output_image/255);
 end
 
