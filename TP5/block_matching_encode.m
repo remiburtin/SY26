@@ -1,4 +1,4 @@
-function [ time, output_image, error ] = block_matching_encode( img_ref, img, M, W )
+function [ time, output_image, error, msd ] = block_matching_encode( img_ref, img, M, W )
     %Conversion en niveaux de gris
     img_ref = rgb2gray(img_ref);
     img = rgb2gray(img);
@@ -66,6 +66,8 @@ function [ time, output_image, error ] = block_matching_encode( img_ref, img, M,
     error = (img - output_image)+128;
     figure('name','Erreur de prediction');
     imshow(error/255);
+    
+    msd = compute_msd(img, output_image);
     
     %champ de vecteur
     figure('name','Vecteurs de mouvement');
