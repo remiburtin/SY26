@@ -7,7 +7,7 @@ function [ delta_x, delta_y, error ] = block_matching( current_block, search_win
             
             block = search_window(i:(i+M)-1,j:(j+M)-1);
             msd = compute_msd(current_block, block);
-            
+
             if msd < min_msd
                 min_msd = msd;
                 delta_y = i - orig_i;
