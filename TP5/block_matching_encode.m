@@ -1,4 +1,6 @@
-function [ time, output_image, error, msd ] = block_matching_encode( img_ref, img, M, W )
+function [ time, output_image, error, msd ] = block_matching_encode( img_ref, img, N, W )
+    M = 2*N+1;
+
     %Conversion en niveaux de gris
     img_ref = rgb2gray(img_ref);
     img = rgb2gray(img);
