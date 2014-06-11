@@ -1,5 +1,5 @@
-function [ delta_x, delta_y, error ] = block_matching( current_block, search_window, orig_i, orig_j )
-    %initialisation du MSD minimum à Infini
+function [delta_x,delta_y,error] = block_matching(current_block,search_window,orig_i,orig_j)
+    %initialisation du MSD minimum a Infini
     min_msd = inf;
     
     M = size(current_block,1);

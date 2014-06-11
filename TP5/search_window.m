@@ -1,5 +1,5 @@
 function [ window, orig_x, orig_y ] = search_window( img, W, M, i, j )
-    %i,j : indices dans l'image, du pixel en haut à gauche du bloc
+    %i,j : indices dans l'image, du pixel en haut a gauche du bloc
     %M   : largeur/hauteur du bloc
     %W   : taille zone de recherche
     y1 = i-W;

@@ -55,9 +55,10 @@ function [ time, output_image, error, msd ] = block_matching_encode( img_ref, im
             l = l + 1;
             
             %on recupere le bloc que nous avons trouve dans l'image de ref
-            %grace au vecteur de mouvement et le mettons à la place qu'il
+            %grace au vecteur de mouvement et le mettons a la place qu'il
             %devrait avoir dans l'image courante
-            output_image(i:(i+M)-1,j:(j+M)-1) = img_ref(i+delta_y : i+M-1+delta_y , j+delta_x : j+M-1+delta_x);
+            ref_block = img_ref(i+delta_y : i+M-1+delta_y , j+delta_x : j+M-1+delta_x);
+            output_image(i:(i+M)-1,j:(j+M)-1) = ref_block;
             
         end;
         k = k + 1;
@@ -79,7 +80,7 @@ function [ time, output_image, error, msd ] = block_matching_encode( img_ref, im
     
     
     %affichage de l'image predite
-    figure('name','Image prédite');
+    figure('name','Image predite');
     imshow(output_image/255);
 end
 
