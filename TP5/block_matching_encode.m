@@ -67,20 +67,20 @@ function [ time, output_image, error, msd ] = block_matching_encode( img_ref, im
     
     %calcul et affichage de l'erreur de prediction
     error = (img - output_image)+128;
-    figure('name','Erreur de prediction');
+    figure('name',strcat('Erreur de prediction n=',num2str(N),' w=', num2str(W)));
     imshow(error/255);
     
     msd = compute_msd(img, output_image);
     
     %champ de vecteur
-    figure('name','Vecteurs de mouvement');
+    figure('name',strcat('Vecteurs de mouvement n=',num2str(N),' w=', num2str(W)));
     quiver(matx/M,maty/M);
     %inversion de l'axe des y
     axis ij;
     
     
     %affichage de l'image predite
-    figure('name','Image predite');
+    figure('name',strcat('Image predite n=',num2str(N),' w=', num2str(W)));
     imshow(output_image/255);
 end
 
