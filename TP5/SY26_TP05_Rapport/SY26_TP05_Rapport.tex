@@ -94,6 +94,20 @@ Le but de ce TP est de mettre en oeuvre la technique du block matching utilisée
 
 \subsection{Padding de l'image}
 
+La division de l'image en bloc implique que la largeur et la hauteur de l'image soient respectivement multiples de la largeur et de la hauteur des blocs. Si ce n'est pas le cas, nous complétons avec des zéros (pixels noirs) grâce à la fonction padarray. Pour calculer le nombre de pixels à rajouter en largeur on utilise la formule suivante : \\
+
+\begin{center}
+	$(M - (largeur(image) \mod M)) \mod M$ \\
+\end{center}
+avec M largeur d'un bloc.
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[height=6cm]{../garden_padding.jpg}
+	\caption{Image issue de la video garden qu'on a voulu diviser en bloc de 7x7. L'image faisant 352x240, il a fallu rajouter 5 pixels noirs en largeur et 5 en hauteur.}
+	\label{fig:padding}
+\end{figure}
+
 \subsection{Calcul de la fenêtre de recherche}
 
 \subsection{Recherche du meilleur bloc}
