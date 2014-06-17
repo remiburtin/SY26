@@ -103,7 +103,7 @@ avec M largeur d'un bloc.
 
 \begin{figure}[H]
 	\centering
-		\includegraphics[height=6cm]{../garden_padding.jpg}
+		\includegraphics[height=6cm]{../Resultats/Garden/garden_padding.jpg}
 	\caption{Image, issue de la video garden, que l'on a voulu diviser en bloc de 7x7. L'image faisant 352x240, il a fallu rajouter 5 pixels noirs en largeur et 5 en hauteur.}
 	\label{fig:padding}
 \end{figure}
@@ -112,7 +112,58 @@ avec M largeur d'un bloc.
 
 \subsection{Recherche du meilleur bloc}
 
+\newpage
 \section{Résultats}
+
+Pour montrer nos résultats, nous allons utiliser deux images issue de la séquence garden (très utilisée dans le domaine du traitement vidéo, comme Lena pour le traitement des images). Voici les deux images que nous allons utiliser : 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[height=5cm]{../garden1.jpg}
+	\includegraphics[height=5cm]{../garden2.jpg}
+	\caption{Frames 2 et 5 de la séquence garden}
+	\label{fig:garden}
+\end{figure}
+
+Le MSD entre ces deux images s'élève à 3465. Voici l'image résultante de la différence entre l'image courante (Frame 5) et l'image de référence (Frame 2) :
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[height=7cm]{../Resultats/Garden/garden_error.jpg}
+	\caption{Différence entre image courante et image de référence}
+	\label{fig:garden_error}
+\end{figure}
+
+On commence par un effectuer un block matching avec des blocs d'une taille 7x7 et une fenêtre de recherche de 17x17 (ou moins selon la position du bloc courant dans l'image) :
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[height=5cm]{../Resultats/Garden/garden_pred_n_3_w_5.jpg}
+	\includegraphics[height=5cm]{../Resultats/Garden/garden_error_n_3_w_5.jpg}
+	\caption{Image courante prédite et erreur de prédiction pour $N=3$ et $W=5$. Le MSD est alors de 1128.}
+	\label{fig:garden_3_5}
+\end{figure}
+
+On passe ensuite à des blocs 3x3 et une fenêtre de recherche 33x33. On devra donc analyser beaucoup plus de positions mais la prédiction sera beaucoup plus fine. En effet on voit que le MSD tombe à 188 :
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[height=5cm]{../Resultats/Garden/garden_pred_n_1_w_15.jpg}
+	\includegraphics[height=5cm]{../Resultats/Garden/garden_error_n_1_w_15.jpg}
+	\caption{Image courante prédite et erreur de prédiction pour $N=1$ et $W=15$. Le MSD tombe alors à 188.}
+	\label{fig:garden_1_15}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[height=8cm]{../Resultats/Garden/garden_graph.jpg}
+	\caption{Evolution du MSD et du temps de calcul en fonction de M et W}
+	\label{fig:garden_graph}
+\end{figure}
+
+On observe que plus la fenêtre de recherche est grande, plus le MSD sera faible, mais plus le temps de calcul sera important. Et inversement pour la taille des blocs. Plus les blocs seront grands, plus le MSD sera important et moins le temps de calul sera important.
+
+
 
 \newpage
 
