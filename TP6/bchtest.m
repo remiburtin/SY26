@@ -1,10 +1,10 @@
-m = 5;
+m = 4;
 
-%Longueur du mot code
+%Longueur du mot code (15)
 n = 2^m-1;
 
 %Longueur du message
-k = 16;
+k = 5;
 
 %Message aleatoire
 msg = gf(randi([0 1],1,k));
@@ -13,10 +13,10 @@ msg = gf(randi([0 1],1,k));
 [gen, t] = bchgenpoly(n,k);
 
 %Codage du message
-code = bchenc(msg,n,k);
+code = bchenc(msg,n,k)
 
 %Ajout de t erreurs aleatoires
-code_bruite = code + randerr(1,n,t);
+code_bruite = code + randerr(1,n,t)
 
 %Decodage
-[msg_decode,nb_err] = bchdec(code_bruite,n,k);
+[msg_decode,nb_err] = bchdec(code_bruite,n,k)
