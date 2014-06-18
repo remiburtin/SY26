@@ -88,9 +88,10 @@ showstringspaces=false}
 
 \section{Introduction}
 
-Le but de ce TP est de mettre en oeuvre la technique du block matching utilisée dans certains algorithmes de compression vidéo.
+Le but de ce TP est de mettre en œuvre la technique du \textit{block matching} utilisée dans certains algorithmes de compression vidéo (codage inter-image, \textit{P-Frame}).
 
-Le principe est le suivant : l’image courante est divisée en blocs de taille M×M. On définit dans l’image de référence une zone de recherche de taille 2W+M placée autour de la position du centre du bloc de l’image courante. Chaque bloc dans la zone de recherche est ensuite comparé avec le bloc de l’image courante.
+Le principe est le suivant : l’image courante est divisée en blocs de taille M×M. On définit dans l’image de référence une zone de recherche de taille 2W+M placée autour de la position du centre du bloc de l’image courante. Chaque bloc dans la zone de recherche est ensuite comparé avec le bloc de l’image courante (on utilisera ici le critère \textit{Mean Squared Difference}).
+
 
 \section{Mise en oeuvre du block matching}
 
@@ -115,7 +116,7 @@ Dans le cadre de cet exercice nous faisons varier N entre 1 et 3.\\
 
 \subsection{Calcul de la fenêtre de recherche}
 
-Pour chaque bloc de l'image, nous devons maintenant calculer une fenêtre de recherche centrée sur le bloc courant et d'une taille de $2W+M$ (W prendra les valeurs 5, 10 et 15 dans notre cas). Afin de calculer les coordonnées de cette fenêtre pour chacun des blocs, nous parcourant tout d'abord tous ces blocs grâce à l'imbrication de deux boucles, ce qui nous permet de calculer les coordonnées du premier pixel dans le coin supérieur gauche du bloc puis de calculer la fenêtre de recherche via la fonction \textit{search\_window} (\textit{cf.} \ref{search_window}) :
+Pour chaque bloc de l'image, nous devons maintenant calculer une fenêtre de recherche centrée sur le bloc courant et d'une taille de $2W+M$ (W prendra les valeurs 5, 10 et 15 dans notre cas). Afin de calculer les coordonnées de cette fenêtre pour chacun des blocs, nous parcourons tout d'abord tous ces blocs grâce à l'imbrication de deux boucles, ce qui nous permet de calculer les coordonnées du premier pixel dans le coin supérieur gauche du bloc puis de calculer la fenêtre de recherche via la fonction \textit{search\_window} (\textit{cf.} \ref{search_window}) :
 \begin{alltt} 
 % Pour i allant de 1 à hauteur de l'image, par pas de M.
 for i=1:M:size(img,1), 
@@ -141,6 +142,14 @@ Afin de calculer les coordonnées dans l'image de la fenêtre de recherche, nous
 
 
 \subsection{Recherche du meilleur bloc}
+
+Pour la recherche du bloc le plus similaire compris dans la fenêtre de recherche, nous avons créé une fonction prenant en paramètre le bloc, la fenêtre ainsi que les coordonnées du bloc dans la fenêtre (\textit{cf.} § précédent).\\
+
+Le but est de trouver le vecteur de mouvement telle que l'erreur moyenne, calculé via le critère MSD, soit minimale. Nous avons mis en place une méthode de recherche complète (dans toute la fenêtre) ce qui est une solution lente à exécuter mais simple à mettre en œuvre, comparé à la méthode de recherche logarithmique à deux dimensions ou à l'estimation de mouvement dite hiérarchique. Le but ici est donc de parcourir toute la fenêtre avec le bloc courant : nous implémentons cette étape grâce à deux boucles imbriquées afin de parcourir les lignes et les colonnes. Pour chaque position du bloc dans la fenêtre de recherche, nous calculons le MSD. Nous avons pour cela implémenté un fonction, \textit{compute\_msd} (\textit{cf.} \ref{msd_code}). Cette fonction implémente la formule suivante (C étant le bloc dans l'image courante, P dans l'image prédite) :
+\[ MSD = \frac{1}{M^2}\sum_{i=0}^{M-1}\sum_{j=0}^{M-1}(C(i,j) - P(i,j))^2 \]
+
+Nous sauvegardons le minimum de tous les MSD calculés ainsi que le vecteur de mouvement pour le bloc correspondant.
+
 
 \newpage
 \section{Résultats}
@@ -199,6 +208,7 @@ On observe que plus la fenêtre de recherche est grande, plus le MSD sera faible
 
 \section{Conclusion}
 
+(Ouverture) Temps de calculs intéressants avec recherche logarithmique ou l'estimation de mouvement hiérarchique (p.49 dans le poly).
 
 \clearpage
 
