@@ -1,7 +1,4 @@
 function [ c ] = hamcode( m, H )
-%UNTITLED4 Summary of this function goes here
-%   Detailed explanation goes here
-
 M = size(H, 1);
 n = size(H, 2);
 
@@ -11,7 +8,7 @@ G = [H(1:M,(n-M):n)' eye(n-M)];
 
 c = m*G;
 
-c = mod(c,2)
+c = mod(c,2);
 
 end
 

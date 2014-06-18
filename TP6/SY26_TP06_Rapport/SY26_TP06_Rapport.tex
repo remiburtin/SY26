@@ -1,0 +1,114 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage[utf8]{inputenc}  % Unicode
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{graphics}
+\usepackage[pdftex]{graphicx, color}
+\usepackage{pdfpages}
+\DeclareGraphicsExtensions{.jpg,.png}
+\pdfoutput=1
+\usepackage[pdftex,
+	bookmarks = true,           % Signets
+	bookmarksnumbered = true,   % Signets numerotes
+	pdfstartview = FitV,        % La page prend toute la hauteur
+	colorlinks=true,
+	citecolor=black,urlcolor=blue,linkcolor=black,
+	pdfauthor={Auteur},
+	pdftitle={Titre},
+ 	pdfsubject={Sujet},
+%	pdfkeywords={},	% Besoin de keywords ?
+	plainpages=false,
+	pdfpagelabels,
+	breaklinks=true,
+   	hyperindex,
+	linktocpage=true	% pour colorier seulement le numéros dans la TOC	
+]{hyperref}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{alltt}
+\usepackage{amsmath}
+\renewcommand{\ttdefault}{txtt}
+
+\lstset{basicstyle=\ttfamily,
+escapeinside={||},
+mathescape=true}
+\setcounter{secnumdepth}{3}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\newcommand*\styleC{\fontsize{9}{10pt}\selectfont }
+\newcommand*\styleD{\fontsize{9}{10pt}\usefont{OT1}{pag}{m}{n}\selectfont }
+
+\makeatletter
+% on fixe le langage utilisé
+\lstset{language=matlab}
+\edef\Motscle{emph={\lst@keywords}}
+\expandafter\lstset\expandafter{
+}
+\makeatother
+
+
+
+\definecolor{Ggris}{rgb}{0.45,0.48,0.45}
+
+\lstset{emphstyle=\ttfamily\color{blue}, % les mots réservés de matlab en bleu
+basicstyle=\ttfamily\styleC, % 
+keywordstyle=\ttfamily,
+commentstyle=\color{Ggris}\styleD, % \styleD commentaire en gris
+numberstyle=\tiny\color{black},
+numbers=left,
+numbersep=10pt,
+lineskip=0.7pt,
+showstringspaces=false}
+%  % inclure le fichier source
+\newcommand{\FSource}[1]{%
+\lstinputlisting[texcl=true]{#1}
+}
+
+%%%%%%%%%
+\textwidth=15cm
+\textheight=21cm
+%\hoffset=-2.5cm
+\tolerance=9000
+\hbadness=9000
+\pretolerance=2500
+
+
+\begin{document}
+%\rmfamily
+
+\input{title.tex}
+
+%\begin{abstract} 
+%\end{abstract} 
+
+%{\bf Keywords:} \newline
+
+
+\clearpage
+
+\section{Introduction}
+
+\newpage
+
+\section{Conclusion}
+
+\clearpage
+
+%
+% ANNEXE
+%
+\appendix
+
+\section{Codes source MATLAB}
+
+\subsection{Code de Hamming : Codage}\label{hamcode}
+
+\FSource{../hamcode.m}
+
+\newpage
+
+\subsection{Code de Hamming : Décodage}\label{hamdecode}
+
+\FSource{../hamdecode.m}
+
+\end{document}

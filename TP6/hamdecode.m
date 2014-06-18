@@ -10,7 +10,7 @@ table = syndtable(H);
 
 e = table(i,:);
 
-% Mot décodé supposé émis
+% Mot decode suppose emis
 
 decode = xor(r,e);
 
