@@ -90,25 +90,55 @@ showstringspaces=false}
 
 Le but de ce TP est de mettre en oeuvre la technique du block matching utilisée dans certains algorithmes de compression vidéo.
 
+Le principe est le suivant : l’image courante est divisée en blocs de taille M×M. On définit dans l’image de référence une zone de recherche de taille 2W+M placée autour de la position du centre du bloc de l’image courante. Chaque bloc dans la zone de recherche est ensuite comparé avec le bloc de l’image courante.
+
 \section{Mise en oeuvre du block matching}
 
 \subsection{Padding de l'image}
 
-La division de l'image en bloc implique que la largeur et la hauteur de l'image soient respectivement multiples de la largeur et de la hauteur des blocs. Si ce n'est pas le cas, nous complétons avec des zéros (pixels noirs) grâce à la fonction padarray. Pour calculer le nombre de pixels à rajouter en largeur on utilise la formule suivante : \\
+La division de l'image en bloc implique que la largeur et la hauteur de l'image soient respectivement multiples de la largeur et de la hauteur des blocs. Si ce n'est pas le cas, nous complétons avec des zéros (pixels noirs) grâce à la fonction \textbf{padarray} et son paramètre DIRECTION que nous fixons à 'post' afin d'ajouter les pixels après. Pour calculer le nombre de pixels à rajouter en largeur on utilise la formule suivante : \\
 
 \begin{center}
 	$(M - (largeur(image) \mod M)) \mod M$ \\
 \end{center}
-avec M largeur d'un bloc.
+avec M largeur d'un bloc = $2^N + 1$, N un entier.\\
+Dans le cadre de cet exercice nous faisons varier N entre 1 et 3.\\
+
+\textit{NB.} Afin de simplifier les calculs, nous convertissons les images en niveaux de gris afin de les manipuler plus aisément.
 
 \begin{figure}[H]
 	\centering
 		\includegraphics[height=6cm]{../Resultats/Garden/garden_padding.jpg}
-	\caption{Image, issue de la video garden, que l'on a voulu diviser en bloc de 7x7. L'image faisant 352x240, il a fallu rajouter 5 pixels noirs en largeur et 5 en hauteur.}
+	\caption{Image, issue de la video \textit{garden}, que l'on a voulu diviser en bloc de 7x7. L'image faisant 352x240, il a fallu rajouter 5 pixels noirs en largeur et 5 en hauteur.}
 	\label{fig:padding}
 \end{figure}
 
 \subsection{Calcul de la fenêtre de recherche}
+
+Pour chaque bloc de l'image, nous devons maintenant calculer une fenêtre de recherche centrée sur le bloc courant et d'une taille de $2W+M$ (W prendra les valeurs 5, 10 et 15 dans notre cas). Afin de calculer les coordonnées de cette fenêtre pour chacun des blocs, nous parcourant tout d'abord tous ces blocs grâce à l'imbrication de deux boucles, ce qui nous permet de calculer les coordonnées du premier pixel dans le coin supérieur gauche du bloc puis de calculer la fenêtre de recherche via la fonction \textit{search\_window} (\textit{cf.} \ref{search_window}) :
+\begin{alltt} 
+% Pour i allant de 1 à hauteur de l'image, par pas de M.
+for i=1:M:size(img,1), 
+	% Pour i allant de 1 à largeur de l'image, par pas de M.
+	for j=1:M:size(img,2),
+		% extraction bloc courant
+		block = img(i:i+M-1,j:j+M-1);
+		%calcul de la fenetre de recherche
+		[window, orig_x, orig_y] = search_window(img_ref,W,M,i,j);
+		[...]
+	end;
+end;
+\end{alltt}
+
+La fonction \textit{search\_window} renvoie trois paramètres : 
+\begin{itemize}
+  \item \textit{window} : matrice constituée des pixels de la fenêtre de recherche
+  \item \textit{orig\_x} : coordonnée en x du bloc courant dans la fenêtre de recherche
+  \item \textit{orig\_y} : coordonnée en y du bloc courant dans la fenêtre de recherche
+\end{itemize}
+
+Afin de calculer les coordonnées dans l'image de la fenêtre de recherche, nous ajoutons (resp. soustrayons) W aux coordonnées horizontales et verticales des bords droit et bas (resp. gauche et haut) du bloc courant, tout en faisant attention à les coordonnées calculées ne débordent pas de l'image.
+
 
 \subsection{Recherche du meilleur bloc}
 
