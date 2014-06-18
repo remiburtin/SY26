@@ -7,15 +7,9 @@ function [ time, output_image, error, msd ] = block_matching_encode( img_ref, im
     
     %padding de l'image (on ajoute des 0 pour que la largeur/hauteur soit
     %multiple de M
-    pad_y = mod(mod(size(img,1),M), M);
-    if pad_y > 0
-        pad_y = M - pad_y;
-    end;
+    pad_y = M - mod(mod(size(img,1),M), M);
     
-    pad_x = mod(mod(size(img,2),M), M);
-    if pad_x > 0
-        pad_x = M - pad_x;
-    end;
+    pad_x = M - mod(mod(size(img,2),M), M);
     
     img = double(padarray(img,[pad_y pad_x],0,'post'));
     img_ref = double(padarray(img_ref,[pad_y pad_x],0,'post'));
