@@ -89,6 +89,10 @@ showstringspaces=false}
 \section{Introduction}
 
 \section{Codage de Hamming}
+\subsection{Question 1 - Codage}
+Pour calculer un mot code à partir de la matrice de contrôle $\mathbf{H} = [\mathbf{P}^T | \mathbf{I}_{n-k}]$ et d'un bloc d'information $\mathbf{m}$, il nous suffit de calculer la matrice génératrice $\mathbf{G}$ qui est définie par $[\mathbf{I}_k | \mathbf{P}]$. Puis on obtient le mot code $\mathbf{c}$ en multipliant $\mathbf{m}$ et $\mathbf{G}$ (multiplication modulo 2). Voir fonction hamcode en annexe \ref{hamcode}.
+
+\subsection{Question 2 - Décodage}
 
 \section{Codage BCH}
 
