@@ -90,7 +90,7 @@ showstringspaces=false}
 
 Le but de ce TP est de mettre en œuvre la technique du \textit{block matching} utilisée dans certains algorithmes de compression vidéo (codage inter-image, \textit{P-Frame}).
 
-Le principe est le suivant : l’image courante est divisée en blocs de taille M×M. On définit dans l’image de référence une zone de recherche de taille 2W+M placée autour de la position du centre du bloc de l’image courante. Chaque bloc dans la zone de recherche est ensuite comparé avec le bloc de l’image courante (on utilisera ici le critère \textit{Mean Squared Difference}).
+Le principe est le suivant : l’image courante est divisée en blocs de taille MxM. On définit dans l’image de référence une zone de recherche de taille 2W+M placée autour de la position du centre du bloc de l’image courante. Chaque bloc dans la zone de recherche est ensuite comparé avec le bloc de l’image courante (on utilisera ici le critère \textit{Mean Squared Difference}).
 
 
 \section{Mise en oeuvre du block matching}
@@ -150,6 +150,14 @@ Le but est de trouver le vecteur de mouvement telle que l'erreur moyenne, calcul
 
 Nous sauvegardons le minimum de tous les MSD calculés ainsi que le vecteur de mouvement pour le bloc correspondant.
 
+\subsection{Reconstruction image prédite}
+
+Nous construisons l'image prédite à partir des blocs de l'image de référence. Le bloc $ij$ de l'image prédite correspondra au bloc de l'image de référence (que nous avons trouvé lors de l'étape précedente) qui correspond le mieux au bloc $ij$ de l'image courante. Pour récupérer ces bloc, nous utilisons les vecteurs de déplacement calculés précédemment : 
+
+\begin{alltt} 
+ref_block = img_ref(i+delta_y : i+M-1+delta_y ,j+delta_x : j+M-1+delta_x);
+output_image(i : i+M-1 ,j : j+M-1) = ref_block;
+\end{alltt}
 
 \newpage
 \section{Résultats}
