@@ -126,6 +126,14 @@ Nous observons que l'erreur est corrigé.
 
 \section{Codage BCH}
 
+Pour récupérer le polynôme générateur BCH permettant de corriger 3 erreurs sur 15 bits, on appelle la fonction \textit{bchgenpoly} en lui passant les valeurs de $n$ et $k$, qui sont en l'occurence 15 et 5. Nous générons ensuite un message aléatoire de longueur $k$ avec la fonction \textit{randi}, que nous mettons sous forme de tableau d'élèments du corps de Galois grâce à la fonction \textit{gf}. \\
+Pour coder le message généré, on le passe avec $n$ et $k$ à la fonction \textit{bchenc}. Puis on ajoute 3 erreurs aléatoires :
+\begin{alltt}
+code_bruite = code + randerr(1,n,3)
+\end{alltt}
+Une fois bruité, on peut effectuer le décodage avec la fonction \textit{bchdec} qui nous renvoie le message décodé ainsi que le nombre d'erreurs corrigées.
+Voir code en annexe \ref{bchtest}.
+
 \section{Codes convolutifs}
 
 \begin{figure}[H]
@@ -175,5 +183,11 @@ Ce qui permet de donner la matrice de transfert associée :
 \subsection{Code de Hamming : Décodage}\label{hamdecode}
 
 \FSource{../hamdecode.m}
+
+\newpage
+
+\subsection{Test codage BCH}\label{bchtest}
+
+\FSource{../bchtest.m}
 
 \end{document}
