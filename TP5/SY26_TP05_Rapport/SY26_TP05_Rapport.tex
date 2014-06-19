@@ -208,7 +208,20 @@ On passe ensuite à des blocs 3x3 et une fenêtre de recherche 33x33. On devra d
 	\label{fig:garden_graph}
 \end{figure}
 
-On observe que plus la fenêtre de recherche est grande, plus le MSD sera faible, mais plus le temps de calcul sera important. Et inversement pour la taille des blocs : plus les blocs seront grands, plus le MSD sera important et moins le temps de calcul sera important.
+On observe que plus la fenêtre de recherche est grande, plus le MSD sera faible, mais plus le temps de calcul sera important. Et inversement pour la taille des blocs : plus les blocs seront grands, plus le MSD sera important et moins le temps de calcul sera important. \\
+
+Il peut être aussi intéressant d'afficher l'ensemble des vecteurs de mouvement, pour observer le déplacement des différents bocs entre l'image courante et l'image de référence :
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[height=12cm]{../Resultats/Garden/garden_vec_n_3_w_15.jpg}
+	\caption{Vecteurs de mouvement pour $N=3$ et $W=15$.}
+	\label{fig:garden_vec}
+\end{figure}
+
+On voit que nous arrivons bien à compenser le travelling qui s'opère sur l'arrière plan. Mais que c'est un peu plus difficile sur l'arbre qui est au premier plan.\\
+
+On génére ce champs de vecteur en sauvegardant chaque composante des vecteurs ($x$ et $y$) dans deux matrices séparées. Puis on appelle la fonction \textit{quiver} en lui passant la matrice comportant les composantes $x$ et la matrice comportant les composantes $y$.
 
 
 
