@@ -128,6 +128,31 @@ Nous observons que l'erreur est corrigé.
 
 \section{Codes convolutifs}
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.8]{../codeur_convolutif_exo.png}
+	\caption{Codeur convolutif (3,2,2)}
+	\label{fig:cod_convolutif}
+\end{figure}
+
+Les équations des différentes sorties $Y_j$ sont les suivantes :
+
+\[ Y_j^1 = X_{j}^1 + X_{j-2}^1 \]
+ce qui donne sous la forme matricielle :
+\[ G = \begin{bmatrix} 1 & 0 & 1 \\ 0 & 0 & 0 \end{bmatrix} \] 
+
+\[ Y_j^2 = X_{j-1}^1 + X_{j-2}^1 + X_{j-1}^2 \]
+ce qui donne sous la forme matricielle :
+\[ G = \begin{bmatrix} 0 & 1 & 0 \\ 0 & 1 & 0 \end{bmatrix} \]
+
+\[ Y_j^3 =  X_{j-1}^1 + X_{j}^2 \]
+ce qui donne sous la forme matricielle :
+\[ G = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \end{bmatrix} \] \\
+
+Ce qui permet de donner la matrice de transfert associée :
+\[ G = \begin{bmatrix} 1 & 0 & 1 & 0 & 1 & 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 0 & 1 & 0 & 1 & 0 & 0 \end{bmatrix} \] \\
+
+
 \newpage
 
 \section{Conclusion}
