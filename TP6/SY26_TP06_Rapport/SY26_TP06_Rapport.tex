@@ -88,11 +88,41 @@ showstringspaces=false}
 
 \section{Introduction}
 
+L’objectif de ce TP est la mise en œuvre du codage de canal pour simuler leur capacité de correction
+et en cerner les limites. Pour cela, nous utiliserons le logiciel MATLAB avec la ”Communication Toolbox”
+et Simulink. Nous allons étudier les deux grandes familles de codeurs de canal :
+– Les codes en bloc (linéaires ou cycliques), pour lesquels des blocs de k symboles d’information sont
+protégés indépendamment les uns des autres par m symboles de contrôle pour former des mots
+codes à n symboles.
+– Les codes convolutifs, pour lesquels il n’y a pas de mots codes indépendants, mais où une fenêtre
+glissante de largeur m se déplace sur les symboles d’information et permet de coder un symbole
+d’information en fonction de m symboles précédents.
+
+
 \section{Codage de Hamming}
+
 \subsection{Question 1 - Codage}
-Pour calculer un mot code à partir de la matrice de contrôle $\mathbf{H} = [\mathbf{P}^T | \mathbf{I}_{n-k}]$ et d'un bloc d'information $\mathbf{m}$, il nous suffit de calculer la matrice génératrice $\mathbf{G}$ qui est définie par $[\mathbf{I}_k | \mathbf{P}]$. Puis on obtient le mot code $\mathbf{c}$ en multipliant $\mathbf{m}$ et $\mathbf{G}$ (multiplication modulo 2). Voir fonction hamcode en annexe \ref{hamcode}.
+
+Pour calculer un mot code à partir de la matrice de contrôle de parité $\mathbf{H} = [\mathbf{P}^T | \mathbf{I}_{n-k}]$ et d'un bloc d'information $\mathbf{m}$, il nous suffit de calculer la matrice génératrice $\mathbf{G}$ qui est définie par $[\mathbf{I}_k | \mathbf{P}]$. Puis on obtient le mot code $\mathbf{c}$ en multipliant $\mathbf{m}$ et $\mathbf{G}$ (multiplication modulo 2). Voir fonction \textit{hamcode} en annexe \ref{hamcode}. La matrice de contrôle de parité $\mathbf{H}$ est quant à elle calculer via la fonction MATLAB \textit{hammgen}. Cette fonction prend un paramètre $M$ permettant le calcul de la longueur du mot code en suivant la relation $N=2^M-1$. \\
 
 \subsection{Question 2 - Décodage}
+
+Afin de décoder le mot code précédemment créé, éventuellement entaché d'erreurs, nous avons mis en place une fonction \textit{hamdecode} (\textit{cf.} \ref{hamdecode}) prenant en paramètre le mot code et la matrice de contrôle de parité.
+Pour cela, nous commençons par calculer le syndrome $s = r\times H^T$ ($r$ étant le mot encodé), permettant de retrouver les éventuelles erreurs glissées dans le mot encodé. En effet, si $s$ est différent de 0, alors il existe une erreur dans le mot encodé. Cette erreur se retrouve facilement une fois la table des syndromes calculée.
+Ici, nous ajoutons trois bits de redondance au mot à encoder, il y aura donc $2^3$ syndromes possibles. Pour chacun de ces syndromes, on cherche si il existe une configuration $e$ de 1 erreur, puis de 2 erreurs, puis de 3... telle que $s = e \times H^t$. Pour $s=0$, $e=0$ : il n'existe pas d'erreur. Ainsi, nous pouvons détecter des erreurs dans $2^3 - 1$ mots encodés. Une fonction MATLAB permet de calculer directement la table des syndromes en lui passant la matrice de contrôle de parité : \textit{syndtable}. Sur chaque ligne de la matrice retournée par \textit{syndtable} apparait $e$, correspondant à la position du ou des bits d'erreur. Une opération logique XOR permet donc de corriger l'erreur dans le mot à décoder et de retourner le bon mot code. Nous avons fait le test en insérant une erreur :
+\begin{alltt}
+>> H = hammgen(3); % creation de la matrice de controle de parite
+>> c = hamcode([1 0 1 0], H) % encodage du mot 0101
+c =
+     0     0     1   |   \textit{1     0     1     0}
+		
+% decodage avec inclusion d'une erreur
+>> cdecode = hamdecode( xor([0 1 0 0 0 0 0], c), H)
+cdecode =
+     0     0     1   |   \textit{1     0     1     0}
+\end{alltt}
+
+Nous observons que l'erreur est corrigé.
 
 \section{Codage BCH}
 
