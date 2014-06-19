@@ -150,9 +150,9 @@ Le but est de trouver le vecteur de mouvement telle que l'erreur moyenne, calcul
 
 Nous sauvegardons le minimum de tous les MSD calculés ainsi que le vecteur de mouvement pour le bloc correspondant.
 
-\subsection{Reconstruction image prédite}
+\subsection{Reconstruction de l'image prédite}
 
-Nous construisons l'image prédite à partir des blocs de l'image de référence. Le bloc $ij$ de l'image prédite correspondra au bloc de l'image de référence (que nous avons trouvé lors de l'étape précedente) qui correspond le mieux au bloc $ij$ de l'image courante. Pour récupérer ces bloc, nous utilisons les vecteurs de déplacement calculés précédemment : 
+Nous construisons l'image prédite à partir des blocs de l'image de référence. Le bloc $ij$ de l'image prédite correspondra au bloc de l'image de référence (que nous avons trouvé lors de l'étape précédente) qui correspond le mieux au bloc $ij$ de l'image courante. Pour récupérer ces bloc, nous utilisons les vecteurs de déplacement calculés précédemment : 
 
 \begin{alltt} 
 ref_block = img_ref(i+delta_y : i+M-1+delta_y ,j+delta_x : j+M-1+delta_x);
@@ -162,7 +162,7 @@ output_image(i : i+M-1 ,j : j+M-1) = ref_block;
 \newpage
 \section{Résultats}
 
-Pour montrer nos résultats, nous allons utiliser deux images issue de la séquence garden (très utilisée dans le domaine du traitement vidéo, comme Lena pour le traitement des images). Voici les deux images que nous allons utiliser : 
+Pour montrer nos résultats, nous allons utiliser deux images issue de la séquence \textit{garden} (très utilisée dans le domaine du traitement vidéo, comme Lena pour le traitement des images). Voici les deux images que nous allons utiliser : 
 
 \begin{figure}[H]
 	\centering
@@ -208,7 +208,7 @@ On passe ensuite à des blocs 3x3 et une fenêtre de recherche 33x33. On devra d
 	\label{fig:garden_graph}
 \end{figure}
 
-On observe que plus la fenêtre de recherche est grande, plus le MSD sera faible, mais plus le temps de calcul sera important. Et inversement pour la taille des blocs. Plus les blocs seront grands, plus le MSD sera important et moins le temps de calul sera important.
+On observe que plus la fenêtre de recherche est grande, plus le MSD sera faible, mais plus le temps de calcul sera important. Et inversement pour la taille des blocs : plus les blocs seront grands, plus le MSD sera important et moins le temps de calcul sera important.
 
 
 
@@ -216,7 +216,9 @@ On observe que plus la fenêtre de recherche est grande, plus le MSD sera faible
 
 \section{Conclusion}
 
-(Ouverture) Temps de calculs intéressants avec recherche logarithmique ou l'estimation de mouvement hiérarchique (p.49 dans le poly).
+Ce TP nous a permis de comprendre par la pratique l'encodage prédictif inter-image (P-frame), utilisé dans la plupart des normes de compression vidéo (H261, H263, MPEG...) conjointement à d'autres techniques afin de réduire le taux d'erreur. Ainsi, le standard H261 inclut régulièrement dans la séquence des images encodées en suivant le principe de la norme JPEG (I-Frames). La norme MPEG ajoute aussi des frames bidirectionnelles. 
+En pratique, les vecteurs de mouvement ainsi que les erreurs de prédiction sont encodés afin de supprimer des bits de redondance (en utilisant notamment une transformation par DCT, une quantification scalaire...) mais cette étape n'a pas été traitée lors de ce TP.
+Il serait aussi intéressant de mettre en œuvre l'algorithme de recherche logarithmique ou l'estimation de mouvement hiérarchique afin de retrouver plus rapidement le bloc le plus semblable dans la fenêtre de recherche.
 
 \clearpage
 
