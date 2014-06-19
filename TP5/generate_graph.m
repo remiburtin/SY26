@@ -1,10 +1,17 @@
 Ws = [5,10,15];
 Ns = [1,2,3];
 
-avi = aviread('garden.avi');
+i1 = imread('garden1.jpg');
+i2 = imread('garden2.jpg');
 
-i1 = avi(2).cdata;
-i2 = avi(5).cdata;
+%i1 = imread('man1.jpg');
+%i2 = imread('man2.jpg');
+
+%i1 = imread('car1.jpg');
+%i2 = imread('car2.jpg');
+
+%i1 = imread('girl1.jpg');
+%i2 = imread('girl2.jpg');
 
 msd = zeros(length(Ns),length(Ws));
 time = zeros(length(Ns),length(Ws));
