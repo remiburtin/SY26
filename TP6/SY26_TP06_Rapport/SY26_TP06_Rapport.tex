@@ -88,9 +88,7 @@ showstringspaces=false}
 
 \section{Introduction}
 
-L’objectif de ce TP est la mise en œuvre du codage de canal pour simuler leur capacité de correction et en cerner les limites. Pour cela, nous utiliserons le logiciel MATLAB avec la ”Communication Toolbox” et Simulink. Nous allons étudier les deux grandes familles de codeurs de canal :\\
-– Les codes en bloc (linéaires ou cycliques), pour lesquels des blocs de k symboles d’information sont protégés indépendamment les uns des autres par m symboles de contrôle pour former des mots codes à n symboles.\\
-– Les codes convolutifs, pour lesquels il n’y a pas de mots codes indépendants, mais où une fenêtre glissante de largeur m se déplace sur les symboles d’information et permet de coder un symbole d’information en fonction de m symboles précédents.
+L’objectif de ce TP est la mise en œuvre du codage de canal pour simuler leur capacité de correction et en cerner les limites. Nous allons étudier les codes en bloc (linéaires ou cycliques), pour lesquels des blocs de k symboles d’information sont protégés indépendamment les uns des autres par m symboles de contrôle pour former des mots codes à n symboles.\\
 
 
 \section{Codage de Hamming}
@@ -103,7 +101,7 @@ Pour calculer un mot code à partir de la matrice de contrôle de parité $\math
 
 Afin de décoder le mot code précédemment créé, éventuellement entaché d'erreurs, nous avons mis en place une fonction \textit{hamdecode} (\textit{cf.} \ref{hamdecode}) prenant en paramètre le mot code et la matrice de contrôle de parité.
 Pour cela, nous commençons par calculer le syndrome $s = r\times H^T$ ($r$ étant le mot encodé), permettant de retrouver les éventuelles erreurs glissées dans le mot encodé. En effet, si $s$ est différent de 0, alors il existe une erreur dans le mot encodé. Cette erreur se retrouve facilement une fois la table des syndromes calculée.
-Ici, nous ajoutons trois bits de redondance au mot à encoder, il y aura donc $2^3$ syndromes possibles. Pour chacun de ces syndromes, on cherche si il existe une configuration $e$ de 1 erreur, puis de 2 erreurs, puis de 3... telle que $s = e \times H^t$. Pour $s=0$, $e=0$ : il n'existe pas d'erreur. Ainsi, nous pouvons détecter des erreurs dans $2^3 - 1$ mots encodés. Une fonction MATLAB permet de calculer directement la table des syndromes en lui passant la matrice de contrôle de parité : \textit{syndtable}. Sur chaque ligne de la matrice retournée par \textit{syndtable} apparait $e$, correspondant à la position du ou des bits d'erreur. Une opération logique XOR permet donc de corriger l'erreur dans le mot à décoder et de retourner le bon mot code. Nous avons fait le test en insérant une erreur :
+Ici, nous ajoutons trois bits de redondance au mot à encoder, il y aura donc $2^3$ syndromes possibles. Pour chacun de ces syndromes, on cherche si il existe une configuration $e$ de 1 erreur, puis de 2 erreurs, puis de 3... telle que $s = e \times H^t$. Pour $s=0$, $e=0$ : il n'existe pas d'erreur. Ainsi, nous pouvons détecter $2^3 - 1 = 7$ erreurs différentes, soit une erreur sur une seule bit du message encodé. Une fonction MATLAB permet de calculer directement la table des syndromes en lui passant la matrice de contrôle de parité : \textit{syndtable}. Sur chaque ligne de la matrice retournée par \textit{syndtable} apparait $e$, correspondant à la position du ou des bits d'erreur. Une opération logique XOR permet donc de corriger l'erreur dans le mot à décoder et de retourner le bon mot code. Nous avons fait le test en insérant une erreur :
 \begin{alltt}
 >> H = hammgen(3); % creation de la matrice de controle de parite
 >> c = hamcode([1 0 1 0], H) % encodage du mot 0101
@@ -114,18 +112,23 @@ c =
 >> cdecode = hamdecode( xor([0 1 0 0 0 0 0], c), H)
 cdecode =
      0     0     1   |   \textit{1     0     1     0}
+		
+% decodage avec inclusion de deux erreurs (limites)
+>> cdecode = hamdecode( xor([0 1 0 0 0 0 1], c), H)
+cdecode =
+     0     \textit{1 }    1     \textit{1}     0     \textit{0     1}
 \end{alltt}
 
-Nous observons que l'erreur est corrigé.
+Les bits de redondance sont ajoutés au début (trois premiers bits). Nous observons que si un bit contient une erreur, l'erreur est corrigée car le message retourné par le décodage est retrouvé. Par contre, si deux bits du message sont erronés, la table des syndromes ne permet pas de retrouver les erreurs, le message est alors altéré.
 
 \section{Codage BCH}
 
-Pour récupérer le polynôme générateur BCH permettant de corriger 3 erreurs sur 15 bits, on appelle la fonction \textit{bchgenpoly} en lui passant les valeurs de $n$ et $k$, qui sont en l'occurence 15 et 5. Nous générons ensuite un message aléatoire de longueur $k$ avec la fonction \textit{randi}, que nous mettons sous forme de tableau d'élèments du corps de Galois grâce à la fonction \textit{gf}. \\
+Pour récupérer le polynôme générateur BCH permettant de corriger 3 erreurs sur 15 bits, on appelle la fonction \textit{bchgenpoly} en lui passant les valeurs de $n$ et $k$, qui sont en l’occurrence 15 et 5. Nous générons ensuite un message aléatoire de longueur $k$ avec la fonction \textit{randi}, que nous mettons sous forme de tableau d’éléments du corps de Galois grâce à la fonction \textit{gf}. \\
 Pour coder le message généré, on le passe avec $n$ et $k$ à la fonction \textit{bchenc}. Puis on ajoute 3 erreurs aléatoires :
 \begin{alltt}
 code_bruite = code + randerr(1,n,3)
 \end{alltt}
-Une fois bruité, on peut effectuer le décodage avec la fonction \textit{bchdec} qui nous renvoie le message décodé ainsi que le nombre d'erreurs corrigées.
+Une fois le message bruité, on peut effectuer le décodage avec la fonction \textit{bchdec} qui nous renvoie le message décodé ainsi que le nombre d'erreurs corrigées.
 Voir code en annexe \ref{bchtest}.
 
 % \section{Codes convolutifs}
@@ -158,7 +161,7 @@ Voir code en annexe \ref{bchtest}.
 \newpage
 
 \section{Conclusion}
-Ce TP nous a permis de mieux comprendre comment fonctionnent les codes correcteurs d'erreurs.
+Ce TP nous a permis de mieux comprendre comment fonctionnent les codes correcteurs d'erreurs avec l'application deux deux techniques de détection et de correction d'erreur par code en bloc. Nous avons ainsi pu encoder différents message et leur ajouter des bits de redondance permettant la détection et la correction des erreurs dans certaines limites.
 \clearpage
 
 %
